@@ -2,7 +2,7 @@
 #include<stdlib.h>
 #include<math.h>
 
-Particule Particule::generateur()
+void Particule::generateur()
 {
     double x,x_1,x_2,x_3,x_4,v,v_e,r;
     x = 1.0/RAND_MAX;
@@ -27,7 +27,7 @@ Particule Particule::generateur()
         x_1 = x*rand();
         x_2 = x*rand();
     }
-    v=x_1;
+    v=x_1*v_e;
     while (u_v>1){
         x_1 = x*rand();
         x_2 = x*rand();
@@ -39,3 +39,7 @@ Particule Particule::generateur()
     v_y=v*x_3/u_v;
     v_z=v*x_4/u_v;
 }
+
+ostream & operator<< (ostream & os, const Particule& p)
+{   os<<"position:("<<p.r_x<<","<<p.r_y<<","<<p.r_z<<")\n vitesse:("<<p.v_x<<","<<p.v_y<<","<<p.v_z<<") \n Force:("<<p.F_x<<","<<p.F_y<<","<<p.F_z<<")";
+    return os;}
