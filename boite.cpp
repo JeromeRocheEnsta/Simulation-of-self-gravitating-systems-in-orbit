@@ -1,10 +1,19 @@
 #include "boite.hpp"
+#include <list>
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
 
 // CLass Boite
-
+list<Point2d>& Boite::find_new_centers(){
+    list<Point2d> rep;
+    Point2d P(C.x - w/4, C.y + l/4),Q(C.x - w/4, C.y - l/4),R(C.x + w/4, C.y + l/4),S(C.x + w/4, C.y + l/4);
+    rep.push_back(P);
+    rep.push_back(Q);
+    rep.push_back(R);
+    rep.push_back(S);
+    return rep;
+}
 
 
 

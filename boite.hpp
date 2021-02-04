@@ -36,18 +36,17 @@ class Boite {
     public:
         int level;
         Point2d C; //Center
-        double length;
-        double width;
+        double l; //length
+        double w; //width
         Point2d G; //center of mass
         double m; //mass
         Particule * P; // Pointer on the only particule remaining in the boite
-        Boite *  sister; // Pointer sister
-        Boite * child; // Pointer first child
+        vector<Boite> * child; // Pointer first child
         //Constructeur
         Boite(const list<Particule> &);
         //Method
-        bool check_number_particule(const list<Particule> &); // true if there are particules in false if there is no particules. Have to change P.
-        Point2d find_new_center();
+        int check_number_particule(const list<Particule> &); // return number of particules in th boite
+        list<Point2d>& find_new_centers();
 
 };
 
