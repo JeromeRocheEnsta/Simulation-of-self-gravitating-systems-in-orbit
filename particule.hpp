@@ -1,5 +1,5 @@
-#ifndef BOITE_H
-#define BOITE_H
+#ifndef PARTICULE_H
+#define PARTICULE_H
 
 #include <iostream>
 #include <list>
