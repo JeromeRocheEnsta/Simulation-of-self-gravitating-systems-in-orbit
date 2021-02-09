@@ -1,4 +1,4 @@
-#include "particule.hpp"
+#include "boite.hpp"
 
 #include<stdlib.h>
 #include<math.h>
@@ -40,13 +40,13 @@ void Particule::generateur()
     v_y=v*x_3/u_v;
     v_z=v*x_4/u_v;
 }
-
+/*
 void Particule::force(Boite *b)  // les "..." sont les noms ses attributs de la classe boite
 {   const double G= 6.6742*pow(10,-11);
     const double epsilon =???; // on doit choisir la valeure?
     Particule *p;
     d=pow(r_x-b->"centre_x",2)+pow(r_y-b->"centre_y",2)+pow(r_z-b->."centre_z",2); //calcul du carre de la distance entre la particule et le centre de la boite
-  
+
  //Si cette distance est beaucoup plus grande que la distance entre les particules de la boite (sa taille), on fait comme si la boite etait une grande particule,
  // et on passe à la boite soeur 
  
@@ -75,7 +75,9 @@ void Particule::force(Boite *b)  // les "..." sont les noms ses attributs de la 
     if (b->"boite fille"!=0){force(b->"boite fille")}
    
 }
- 
+*/
+/*
+
 // la valeure de delta t est pas donnee? 
 void Particule::initialisation(){
     v_x=r_x+t*F_x/2*m;
@@ -91,7 +93,7 @@ void Particule::mise_a_jour(){
     r_y=r_y+t*v_y;
     r_z=r_z+t*v_z;
 }
- 
+*/
 
  
 ostream & operator<< (ostream & os, const Particule& p)

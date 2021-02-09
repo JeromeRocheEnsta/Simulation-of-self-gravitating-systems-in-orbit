@@ -4,6 +4,7 @@
         "cstdlib": "cpp",
         "istream": "cpp",
         "streambuf": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "list": "cpp"
     }
 }
