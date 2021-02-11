@@ -47,7 +47,7 @@ class Particule
   
 };
 
-ostream & operator <<(ostream &,const Particule&);
+ostream & operator <<(ostream &,Particule&);
 
 
 
@@ -66,19 +66,20 @@ class Boite {
         Boite * child;
         //Constructeur
         Boite() {sister=NULL; child=NULL;};
-        Boite(const list<Particule> &){sister=NULL; child=NULL;};
+        Boite(list<Particule> &){sister=NULL; child=NULL;};
         Boite(int lev, Point3d center, double length, double width, double depth){level= lev; C=center; l=length; w=width; d=depth;};
         //Method
-        int check_number(const list<Particule> &); // return number of particules in th boite
-        void find_unique_child(const list<Particule> &);
-        void calculate_mass(const list<Particule> &);
-        void calculate_center_of_mass(const list<Particule> &);
+        int check_number(list<Particule> &); // return number of particules in th boite
+        void find_unique_child(list<Particule> &);
+        void calculate_mass(list<Particule> &);
+        void calculate_center_of_mass(list<Particule> &);
 };
 
-void create_graph(Boite *, const list<Particule> &);
+void create_graph(Boite *, list<Particule> &);
 
-ostream & operator <<(ostream &,const Boite&);
-Boite first_box(const list<Particule> &);
+ostream & operator <<(ostream &,Boite&);
+void print_graph(Boite *);
+Boite first_box(list<Particule> &);
 void force(Particule p, Boite& b, double M);
 
 

@@ -98,6 +98,6 @@ void Particule::mise_a_jour(double M){
 
 
 
-ostream & operator<< (ostream & os, const Particule& p)
+ostream & operator<< (ostream & os, Particule& p)
 {   os<<"position:("<<p.r_x<<","<<p.r_y<<","<<p.r_z<<")\n vitesse:("<<p.v_x<<","<<p.v_y<<","<<p.v_z<<") \n Force:("<<p.F_x<<","<<p.F_y<<","<<p.F_z<<")";
     return os;}

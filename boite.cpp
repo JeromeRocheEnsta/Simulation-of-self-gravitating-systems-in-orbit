@@ -6,25 +6,19 @@
 #include <math.h>
 
 //Fonction mère
-void create_graph(Boite* current,const list<Particule> & particules){
-    cout<<current<<endl;
-    cout<<current->check_number(particules)<<endl;
+void create_graph(Boite* current,list<Particule> & particules){
     //On profite de commencer par trouver m et G
     current->calculate_mass(particules);
-    
     current->calculate_center_of_mass(particules);
     
     //Corps de la fonction
     if(current->check_number(particules)==0){
         current->P = NULL;
-        cout<<"COucou"<<endl;
     }
     else if(current->check_number(particules)==1){
-        cout<<"Encule"<<endl;
         //SEGMENTATION FAULT ICI
         current->find_unique_child(particules);
     }else{
-        cout<<"Je suis al"<<endl;
         //Créer les enfants
         double w = current->w;
         double l = current->l;
@@ -40,22 +34,18 @@ void create_graph(Boite* current,const list<Particule> & particules){
         current->child->sister->sister->sister->sister->sister->sister = new Boite(current->level + 1, V, l/2, w/2, d/2 );
         current->child->sister->sister->sister->sister->sister->sister->sister = new Boite(current->level + 1, W, l/2, w/2, d/2 );
         //Appliquer la fonction à la soeur et à la première fille
-        cout<<"Cou"<<endl;
-        cout<<current->sister<<endl;
         if(current->sister != 0){
             create_graph( current->sister, particules);
         }
-        cout<<"1er erreur traitée"<<endl;
-        cout<<current->child<<endl;
         create_graph( current->child, particules);
     }
 }
 
 //Construction première boite
-Boite first_box(const list<Particule> & particules){
+Boite first_box(list<Particule> & particules){
     Boite B;
     B.level=1;
-    list<Particule>::const_iterator it =particules.begin();
+    list<Particule>::iterator it =particules.begin();
     double max_length=0;
     double max_depth =0;
     double max_width =0;
@@ -85,9 +75,9 @@ Boite first_box(const list<Particule> & particules){
 
 // CLass Boite
 
-int Boite::check_number(const list<Particule> & particules){
+int Boite::check_number(list<Particule> & particules){
     int compteur=0;
-    list<Particule>::const_iterator it = particules.begin();
+    list<Particule>::iterator it = particules.begin();
     for(; it!=particules.end(); it++){
         if( (it->r_x >= C.x - w/2) && (it->r_y >= C.y - l/2) && (it->r_x < C.x + w/2) && (it->r_y < C.y + l/2) && (it->r_z >= C.z - d/2) && (it->r_z < C.z + d/2)){
             compteur++;
@@ -96,18 +86,19 @@ int Boite::check_number(const list<Particule> & particules){
     return compteur;
 }
 
-void Boite::find_unique_child(const list<Particule> & particules){
-    list<Particule>::const_iterator it = particules.begin();
+void Boite::find_unique_child(list<Particule> & particules){
+    list<Particule>::iterator it =particules.begin();
+
     for(; it!=particules.end(); it++){
         if( (it->r_x >= C.x - w/2) && (it->r_y >= C.y - l/2) && (it->r_x < C.x + w/2) && (it->r_y < C.y + l/2) && (it->r_z >= C.z - d/2) && (it->r_z < C.z + d/2)){
-            *P= *it;
+            P= &*it;
         }
     }
 }
 
-void Boite::calculate_mass(const list<Particule> & particules){
+void Boite::calculate_mass(list<Particule> & particules){
     m=0;
-    list<Particule>::const_iterator it = particules.begin();
+    list<Particule>::iterator it = particules.begin();
     for(; it!=particules.end(); it++){
         if( (it->r_x >= C.x - w/2) && (it->r_y >= C.y - l/2) && (it->r_x < C.x + w/2) && (it->r_y < C.y + l/2) && (it->r_z >= C.z - d/2) && (it->r_z < C.z + d/2)){
             m+= it->m;
@@ -115,11 +106,11 @@ void Boite::calculate_mass(const list<Particule> & particules){
     }
 }
 
-void Boite::calculate_center_of_mass(const list<Particule> & particules){
+void Boite::calculate_center_of_mass(list<Particule> & particules){
     G.x=0;
     G.y=0;
     G.z=0;
-    list<Particule>::const_iterator it = particules.begin();
+    list<Particule>::iterator it = particules.begin();
     for(; it!=particules.end(); it++){
         if( (it->r_x >= C.x - w/2) && (it->r_y >= C.y - l/2) && (it->r_x < C.x + w/2) && (it->r_y < C.y + l/2) && (it->r_z >= C.z - d/2) && (it->r_z < C.z + d/2)){
             G.x += it->m*it->r_x;
@@ -130,9 +121,22 @@ void Boite::calculate_center_of_mass(const list<Particule> & particules){
     G/=m;
 }
 
+void print_graph(Boite * current){
+    if(current->sister != 0){
+            print_graph(current->sister);
+    }
 
-ostream & operator<< (ostream & os, const Boite& B){
-    os<<"Centre:("<<B.C.x<<","<<B.C.y<<","<<B.C.z<<")\n largeur:("<<B.w<<") \n  longueur:("<<B.l<<") \n width:("<<B.d<<") \n";
+    if(current->child != 0){
+        print_graph(current->child);
+    }
+    else{
+        cout<<*current<<endl;
+    }
+}
+
+
+ostream & operator<< (ostream & os, Boite& B){
+    os<<"Niveau:("<<B.level<<") / Centre:("<<B.C.x<<","<<B.C.y<<","<<B.C.z<<") / largeur:("<<B.w<<") /  longueur:("<<B.l<<") / Profondeur:("<<B.d<<") \n";
     return os;
 }
 
