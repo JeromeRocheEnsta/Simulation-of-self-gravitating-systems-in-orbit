@@ -21,16 +21,26 @@ void create_graph(Boite& current,const list<Particule> & particules){
         //Créer les enfants
         double w = current.w;
         double l = current.l;
-        Point2d C = current.C;
-        Point2d P(C.x - w/4, C.y + l/4),Q(C.x + w/4, C.y + l/4),R(C.x + w/4, C.y - l/4),S(C.x - w/4, C.y - l/4);
-        Boite first(current.level, P, current.l/2, current.w/2 );
-        Boite second(current.level, Q, current.l/2, current.w/2 );
-        Boite third(current.level, R, current.l/2, current.w/2 );
-        Boite fourth(current.level, S, current.l/2, current.w/2 );
+        double d = current.d;
+        Point3d C = current.C;
+        Point3d P(C.x - w/4, C.y + l/4,C.z + d/4),Q(C.x + w/4, C.y + l/4, C.z + d/4),R(C.x + w/4, C.y - l/4, C.z + d/4),S(C.x - w/4, C.y - l/4, C.z + d/4),T(C.x - w/4, C.y + l/4,C.z + d/4),U(C.x + w/4, C.y + l/4, C.z + d/4),V(C.x + w/4, C.y - l/4, C.z + d/4),W(C.x - w/4, C.y - l/4, C.z + d/4);
+        Boite first(current.level + 1, P, current.l/2, current.w/2, current.d/2 );
+        Boite second(current.level + 1, Q, current.l/2, current.w/2, current.d/2 );
+        Boite third(current.level + 1, R, current.l/2, current.w/2, current.d/2);
+        Boite fourth(current.level + 1, S, current.l/2, current.w/2, current.d/2 );
+        Boite fifth(current.level + 1, T, current.l/2, current.w/2, current.d/2 );
+        Boite sixth(current.level + 1, U, current.l/2, current.w/2, current.d/2 );
+        Boite seventh(current.level + 1, V, current.l/2, current.w/2, current.d/2 );
+        Boite eighth(current.level + 1, W, current.l/2, current.w/2, current.d/2 );
+
         first.sister = &second;
         second.sister = &third;
         third.sister = &fourth;
-        fourth.sister = NULL;
+        fourth.sister = &fifth;
+        fifth.sister = &sixth;
+        sixth.sister = &seventh;
+        seventh.sister = &eighth;
+        eighth.sister = NULL;
         current.child = &first;
         //Appliquer la fonction à la soeur et à la première fille
         create_graph( *current.sister, particules);
@@ -40,15 +50,6 @@ void create_graph(Boite& current,const list<Particule> & particules){
 
 
 // CLass Boite
-list<Point2d> Boite::find_new_centers(){
-    list<Point2d> rep;
-    Point2d P(C.x - w/4, C.y + l/4),Q(C.x + w/4, C.y + l/4),R(C.x + w/4, C.y - l/4),S(C.x - w/4, C.y - l/4);
-    rep.push_back(P);
-    rep.push_back(Q);
-    rep.push_back(R);
-    rep.push_back(S);
-    return rep;
-}
 
 int Boite::check_number(const list<Particule> & particules){
     int compteur=0;
@@ -74,46 +75,46 @@ void Boite::find_unique_child(const list<Particule> & particules){
 
 // Class Point2d
 
-Point2d operator + (const Point2d& u, const Point2d& v){
-    Point2d w(v);
+Point3d operator + (const Point3d& u, const Point3d& v){
+    Point3d w(v);
     return w+=u;
 }
 
 
-Point2d operator - (const Point2d& u, const Point2d& v){
-    Point2d w(u);
+Point3d operator - (const Point3d& u, const Point3d& v){
+    Point3d w(u);
     return w-=v;
 }
 
 
-Point2d operator * (const Point2d& u,double a){
-    Point2d w(u);
+Point3d operator * (const Point3d& u,double a){
+    Point3d w(u);
     return w*=a;
 }
-Point2d operator * (double a, const Point2d& u){
-    Point2d w(u);
+Point3d operator * (double a, const Point3d& u){
+    Point3d w(u);
     return w*=a;
 }
 
 
-Point2d operator / (const Point2d& u,double a){
-    Point2d w(u);
+Point3d operator / (const Point3d& u,double a){
+    Point3d w(u);
     return w/=a;
 }
-Point2d operator / (double a, const Point2d& u){
-    Point2d w(u);
+Point3d operator / (double a, const Point3d& u){
+    Point3d w(u);
     return w/=a;
 }
 
-bool operator ==(const Point2d & u, const Point2d &v){
+bool operator ==(const Point3d & u, const Point3d &v){
     return (u.x==v.x) && (u.y==v.y);
 }
 
-bool operator !=(const Point2d & u, const Point2d &v){
+bool operator !=(const Point3d & u, const Point3d &v){
     return !(u==v);
 }
 
-ostream & operator <<(ostream & os ,const Point2d& u){
+ostream & operator <<(ostream & os ,const Point3d& u){
     os<<"( "<<u.x<<", "<<u.y<<" )";
     return os ;
 }

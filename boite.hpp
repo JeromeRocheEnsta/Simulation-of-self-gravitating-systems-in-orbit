@@ -7,26 +7,27 @@
 using namespace std;
 
 
-// Class Point2d
-class Point2d{
+// Class Point3d
+class Point3d{
     public:
         double x;
         double y;
-        Point2d(double x0=0,double y0=0):x(x0),y(y0){} //constructeur prenant deux coordonnées
-        Point2d& operator +=(const Point2d & P){x+=P.x; y+=P.y; return *this;}
-        Point2d& operator -=(const Point2d & P){x-=P.x; y-=P.y; return *this;}
-        Point2d& operator *=(double a){x*=a; y*=a; return *this;}
-        Point2d& operator /=(double a){x/=a; y/=a; return *this;}
+        double z;
+        Point3d(double x0=0,double y0=0, double z0=0):x(x0),y(y0),z(z0){} //constructeur prenant deux coordonnées
+        Point3d& operator +=(const Point3d & P){x+=P.x; y+=P.y; z=P.z; return *this;}
+        Point3d& operator -=(const Point3d & P){x-=P.x; y-=P.y; z=P.z; return *this;}
+        Point3d& operator *=(double a){x*=a; y*=a; z*=a;return *this;}
+        Point3d& operator /=(double a){x/=a; y/=a; z/=a;return *this;}
 };
-Point2d operator + (const Point2d&, const Point2d&);
-Point2d operator - (const Point2d&, const Point2d&);
-Point2d operator * (double a, const Point2d&);
-Point2d operator * (const Point2d&, double a);
-Point2d operator / (double a, const Point2d&);
-Point2d operator / (const Point2d&, double a);
-bool operator == (const Point2d&, const Point2d&);
-bool operator != (const Point2d&, const Point2d&);
-ostream & operator <<(ostream & os ,const Point2d&);
+Point3d operator + (const Point3d&, const Point3d&);
+Point3d operator - (const Point3d&, const Point3d&);
+Point3d operator * (double a, const Point3d&);
+Point3d operator * (const Point3d&, double a);
+Point3d operator / (double a, const Point3d&);
+Point3d operator / (const Point3d&, double a);
+bool operator == (const Point3d&, const Point3d&);
+bool operator != (const Point3d&, const Point3d&);
+ostream & operator <<(ostream & os ,const Point3d&);
 
 //CLass Particule
 class Particule
@@ -54,10 +55,11 @@ ostream & operator <<(ostream &,const Particule&);
 class Boite {
     public:
         int level;
-        Point2d C; //Center
+        Point3d C; //Center
         double l; //length
         double w; //width
-        Point2d G; //center of mass
+        double d; //depth
+        Point3d G; //center of mass
         double m; //mass
         Particule * P; // Pointer on the only particule remaining in the boite
         Boite * sister; 
@@ -65,13 +67,12 @@ class Boite {
         //Constructeur
         Boite() {sister=NULL; child=NULL;};
         Boite(const list<Particule> &){sister=NULL; child=NULL;};
-        Boite(int lev, Point2d center, double length, double width){level= lev; C=center; l=length; w=width; sister=NULL; child=NULL;};
+        Boite(int lev, Point3d center, double length, double width, double depth){level= lev; C=center; l=length; w=width; d=depth;sister=NULL; child=NULL;};
         //Method
         int check_number(const list<Particule> &); // return number of particules in th boite
         void find_unique_child(const list<Particule> &);
         //void calculate_mass(const list<Particule> &);
         //void calculate_center_of_mass(const list<Particule> &);
-        list<Point2d> find_new_centers();
 };
 
 void create_graph(Boite &, const list<Particule> &);
