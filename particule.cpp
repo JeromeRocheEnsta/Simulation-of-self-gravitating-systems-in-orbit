@@ -72,21 +72,22 @@ void force(Particule p, Boite *b, double M)  // M est la masse nd'une particule
     // Sinon on passe a la boite fille
     if (b->child!=0){force(p,b->child,M);};
 
+};
 }
 
 
-void Particule::initialisation(){
+void Particule::initialisation(double M){
     double t=pow(10,-2);
-    v_x=r_x+t*F_x/2*m;
-    v_y=r_y+t*F_y/2*m;
-    v_z=r_z+t*F_z/2*m;
+    v_x=r_x+t*F_x/2*M;
+    v_y=r_y+t*F_y/2*M;
+    v_z=r_z+t*F_z/2*M;
 }
 
-void Particule::mise_a_jour(){
+void Particule::mise_a_jour(double M){
     double t=pow(10,-2);
-    v_x=r_x+t*F_x/m;
-    v_y=r_y+t*F_y/m;
-    v_z=r_z+t*F_z/m;
+    v_x=r_x+t*F_x/M;
+    v_y=r_y+t*F_y/M;
+    v_z=r_z+t*F_z/M;
     r_x=r_x+t*v_x;
     r_y=r_y+t*v_y;
     r_z=r_z+t*v_z;
