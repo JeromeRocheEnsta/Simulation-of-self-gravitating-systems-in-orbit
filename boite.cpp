@@ -55,7 +55,7 @@ int Boite::check_number(const list<Particule> & particules){
     int compteur=0;
     list<Particule>::const_iterator it = particules.begin();
     for(; it!=particules.end(); it++){
-        if( (it->r_x >= C.x - w/2) && (it->r_y >= C.y - l/2) && (it->r_x < C.x + w/2) && (it->r_y < C.y + l/2) ){
+        if( (it->r_x >= C.x - w/2) && (it->r_y >= C.y - l/2) && (it->r_x < C.x + w/2) && (it->r_y < C.y + l/2) && (it->r_z >= C.z - d/2) && (it->r_z < C.z + d/2)){
             compteur++;
         }
     }
@@ -65,7 +65,7 @@ int Boite::check_number(const list<Particule> & particules){
 void Boite::find_unique_child(const list<Particule> & particules){
     list<Particule>::const_iterator it = particules.begin();
     for(; it!=particules.end(); it++){
-        if( (it->r_x >= C.x - w/2) && (it->r_y >= C.y - l/2) && (it->r_x < C.x + w/2) && (it->r_y < C.y + l/2) ){
+        if( (it->r_x >= C.x - w/2) && (it->r_y >= C.y - l/2) && (it->r_x < C.x + w/2) && (it->r_y < C.y + l/2) && (it->r_z >= C.z - d/2) && (it->r_z < C.z + d/2)){
             *P= *it;
         }
     }
