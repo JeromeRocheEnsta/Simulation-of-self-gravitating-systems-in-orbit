@@ -1,8 +1,3 @@
-#include "boite.hpp"
-
-#include<stdlib.h>
-#include<math.h>
-
 void Particule::generateur()
 {
     double x,x_1,x_2,x_3,x_4,v,v_e,r;
@@ -41,43 +36,44 @@ void Particule::generateur()
     v_z=v*x_4/u_v;
 }
 
-/*
-void force(Particule p, Boite *b)  // 
+
+void force(Particule p, Boite *b, double M)  // M est la masse nd'une particule
 {   const double G= 6.6742*pow(10,-11);
     const double epsilon = min (b->l,b->w,b->d)/100;
     Particule *P_term;
-    d=pow(p.r_x-(b->G)->x,2)+pow(p.r_y-(b->G)->y,2)+pow(p.r_z-(b->G)->z,2); //calcul du carre de la distance entre la particule et le centre de la boite
+    Point3d Centre=b->G;
+    double d,r;
+    d=pow(p.r_x-Centre.x,2)+pow(p.r_y-Centre.y,2)+pow(p.r_z-Centre.z,2); //calcul du carre de la distance entre la particule et le centre de la boite
 
  //Si cette distance est beaucoup plus grande que la distance entre les particules de la boite (sa taille), on fait comme si la boite etait une grande particule,
- // et on passe à la boite soeur 
- 
+ // et on passe à la boite soeur
+
     if (b->l/pow(d,1/2)<epsilon){
-        p.F_x=p.F_x-G*b->m*p.m*((b->G)->x-p.r_x)/pow(d,3); //"??" est la masse d'une particule 
-        p.F_y=p.F_y-G*b->m*p.m*((b->G)->y-p.r_y)/pow(d,3);
-        p.F_x=p.F_z-G*b->m*p.m*((b->G)->z-p.r_z)/pow(d,3);
-        if (b->sister!=0){force(b->sister)}
-        }
- 
-   // Si on est face à une boite terminale, s'il y a une particule dedans, on calcule la force qu'elle exerce sur notre particule,
+        p.F_x=p.F_x-G*b->m*M*(Centre.x-p.r_x)/pow(d,3);
+        p.F_y=p.F_y-G*b->m*M*(Centre.y-p.r_y)/pow(d,3);
+        p.F_x=p.F_z-G*b->m*M*(Centre.z-p.r_z)/pow(d,3);
+        if (b->sister!=0){force(p,b->sister,M);};
+        };
+
+   // Si on est face à une boite terminale, et s'il y a une particule dedans, on calcule la force qu'elle exerce sur notre particule,
    // puis on passe a la soeur (qu'il y ai une particule ou non)
- 
+
    if (b->child==0){
         if (b->P!=0){
             P_term=b->P;
-            r=pow(p.r_x-P_term.r_x,2)+pow(p.r_y-P_term.r_y,2)+pow(p.r_z-P_term.r_z,2);
-            if (r<=epsilon){r=epsilon};
-            p.F_x=p.F_x-G*b.m*p.m*(P_term->r_x-p.r_x)/pow(r,3);
-            p.F_y=p.F_y-G*b.m*p.m*(P_term->r_y-p.r_y)/pow(r,3);
-            p.F_x=p.F_z-G*b.m*p.m*(P_term->r_z-p.r_z)/pow(r,3);
-        if (b->sister!=0){force(b->sister)}
-    }
-       
-    // Sinon on passe a la boite fille 
-    if (b->child=0){force(b->child)}
-   
+            r=pow(p.r_x-P_term->r_x,2)+pow(p.r_y-P_term->r_y,2)+pow(p.r_z-P_term->r_z,2); //calcul du carre de la distance entre la particule en argument et la particule terminale de la boite
+            if (r<=epsilon){r=epsilon;};
+            p.F_x=p.F_x-G*b->m*M*(P_term->r_x-p.r_x)/pow(r,3);
+            p.F_y=p.F_y-G*b->m*M*(P_term->r_y-p.r_y)/pow(r,3);
+            p.F_x=p.F_z-G*b->m*M*(P_term->r_z-p.r_z)/pow(r,3);
+        if (b->sister==0){force(p,b->sister,M);};
+    };
+
+    // Sinon on passe a la boite fille
+    if (b->child!=0){force(p,b->child,M);};
+
 }
 
-/*
 
 void Particule::initialisation(){
     double t=pow(10,-2);
@@ -85,7 +81,7 @@ void Particule::initialisation(){
     v_y=r_y+t*F_y/2*m;
     v_z=r_z+t*F_z/2*m;
 }
- 
+
 void Particule::mise_a_jour(){
     double t=pow(10,-2);
     v_x=r_x+t*F_x/m;
@@ -95,9 +91,9 @@ void Particule::mise_a_jour(){
     r_y=r_y+t*v_y;
     r_z=r_z+t*v_z;
 }
-*/
 
- 
+
+
 ostream & operator<< (ostream & os, const Particule& p)
 {   os<<"position:("<<p.r_x<<","<<p.r_y<<","<<p.r_z<<")\n vitesse:("<<p.v_x<<","<<p.v_y<<","<<p.v_z<<") \n Force:("<<p.F_x<<","<<p.F_y<<","<<p.F_z<<")";
     return os;}
