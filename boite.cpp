@@ -7,10 +7,8 @@
 //Fonction mère
 void create_graph(Boite& current,const list<Particule> & particules){
     //On profite de commencer par trouver m et G
-    /*
     current.calculate_mass(particules);
     current.calculate_center_of_mass(particules);
-    */
     //Corps de la fonction
     if(current.check_number(particules)==0){
         current.P = NULL;
@@ -97,8 +95,13 @@ void Boite::calculate_center_of_mass(const list<Particule> & particules){
 }
 
 
+ostream & operator<< (ostream & os, const Boite& B){
+    os<<"Centre:("<<B.C.x<<","<<B.C.y<<","<<B.C.z<<")\n longueur:("<<B.l<<") \n largeur:("<<B.w<<") \n width:("<<B.l<<") \n";
+    return os;
+}
 
-// Class Point2d
+
+// Class Point3d
 
 Point3d operator + (const Point3d& u, const Point3d& v){
     Point3d w(v);

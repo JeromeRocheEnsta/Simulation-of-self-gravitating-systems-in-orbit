@@ -78,7 +78,7 @@ class Boite {
 
 void create_graph(Boite &, const list<Particule> &);
 
-
+ostream & operator <<(ostream &,const Boite&);
 
 
 
