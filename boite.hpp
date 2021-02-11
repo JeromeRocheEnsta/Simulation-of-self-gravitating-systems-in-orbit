@@ -42,7 +42,6 @@ class Particule
         r_x(r_x_),r_y(r_y_),r_z(r_z_),v_x(v_x_),v_y(v_y_),v_z(v_z_),F_x(F_x_),F_y(F_y_),F_z(F_z_){}
 
     void generateur();
-    //void force(Boite& );
     void initialisation ();
     void mise_a_jour();
   
@@ -80,7 +79,7 @@ void create_graph(Boite &, const list<Particule> &);
 
 ostream & operator <<(ostream &,const Boite&);
 
-
+void force(Particule p, Boite& b, double M);
 
 
 
