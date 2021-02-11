@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
+#include <math.h>
 
 //Fonction mère
 void create_graph(Boite& current,const list<Particule> & particules){
