@@ -1,3 +1,6 @@
+#include "boite.hpp"
+#include "math.h"
+
 void Particule::generateur()
 {
     double x,x_1,x_2,x_3,x_4,v,v_e,r;
@@ -39,7 +42,7 @@ void Particule::generateur()
 
 void force(Particule p, Boite *b, double M)  // M est la masse nd'une particule
 {   const double G= 6.6742*pow(10,-11);
-    const double epsilon = min (b->l,b->w,b->d)/100;
+    const double epsilon = min(b->l,min(b->w,b->d))/100;
     Particule *P_term;
     Point3d Centre=b->G;
     double d,r;
