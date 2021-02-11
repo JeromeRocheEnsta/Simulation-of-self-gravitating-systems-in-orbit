@@ -71,6 +71,31 @@ void Boite::find_unique_child(const list<Particule> & particules){
     }
 }
 
+void Boite::calculate_mass(const list<Particule> & particules){
+    double m=0;
+    list<Particule>::const_iterator it = particules.begin();
+    for(; it!=particules.end(); it++){
+        if( (it->r_x >= C.x - w/2) && (it->r_y >= C.y - l/2) && (it->r_x < C.x + w/2) && (it->r_y < C.y + l/2) && (it->r_z >= C.z - d/2) && (it->r_z < C.z + d/2)){
+            m+= it->m;
+        }
+    }
+}
+
+void Boite::calculate_center_of_mass(const list<Particule> & particules){
+    G.x=0;
+    G.y=0;
+    G.z=0;
+    list<Particule>::const_iterator it = particules.begin();
+    for(; it!=particules.end(); it++){
+        if( (it->r_x >= C.x - w/2) && (it->r_y >= C.y - l/2) && (it->r_x < C.x + w/2) && (it->r_y < C.y + l/2) && (it->r_z >= C.z - d/2) && (it->r_z < C.z + d/2)){
+            G.x += it->m*it->r_x;
+            G.y += it->m*it->r_y;
+            G.z += it->m*it->r_z;
+        }
+    }
+    G/=m;
+}
+
 
 
 // Class Point2d

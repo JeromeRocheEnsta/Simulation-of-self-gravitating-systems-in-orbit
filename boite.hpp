@@ -33,6 +33,7 @@ ostream & operator <<(ostream & os ,const Point3d&);
 class Particule
 {
     public:
+    double m;
     double r_x , r_y, r_z;
     double v_x , v_y , v_z;
     double F_x , F_y , F_z;
@@ -71,8 +72,8 @@ class Boite {
         //Method
         int check_number(const list<Particule> &); // return number of particules in th boite
         void find_unique_child(const list<Particule> &);
-        //void calculate_mass(const list<Particule> &);
-        //void calculate_center_of_mass(const list<Particule> &);
+        void calculate_mass(const list<Particule> &);
+        void calculate_center_of_mass(const list<Particule> &);
 };
 
 void create_graph(Boite &, const list<Particule> &);
