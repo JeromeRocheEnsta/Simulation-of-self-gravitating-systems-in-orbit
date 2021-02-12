@@ -14,17 +14,22 @@ void create_graph(Boite* current,list<Particule> & particules){
     //Corps de la fonction
     if(current->check_number(particules)==0){
         current->P = NULL;
+        if(current->sister != 0){
+            create_graph( current->sister, particules);
+        }
     }
     else if(current->check_number(particules)==1){
-        //SEGMENTATION FAULT ICI
         current->find_unique_child(particules);
+        if(current->sister != 0){
+            create_graph( current->sister, particules);
+        }
     }else{
         //Créer les enfants
         double w = current->w;
         double l = current->l;
         double d = current->d;
         Point3d C = current->C;
-        Point3d P(C.x - w/4, C.y + l/4,C.z + d/4),Q(C.x + w/4, C.y + l/4, C.z + d/4),R(C.x + w/4, C.y - l/4, C.z + d/4),S(C.x - w/4, C.y - l/4, C.z + d/4),T(C.x - w/4, C.y + l/4,C.z + d/4),U(C.x + w/4, C.y + l/4, C.z + d/4),V(C.x + w/4, C.y - l/4, C.z + d/4),W(C.x - w/4, C.y - l/4, C.z + d/4);
+        Point3d P(C.x - w/4, C.y + l/4,C.z + d/4),Q(C.x + w/4, C.y + l/4, C.z + d/4),R(C.x + w/4, C.y - l/4, C.z + d/4),S(C.x - w/4, C.y - l/4, C.z + d/4),T(C.x - w/4, C.y + l/4,C.z - d/4),U(C.x + w/4, C.y + l/4, C.z - d/4),V(C.x + w/4, C.y - l/4, C.z - d/4),W(C.x - w/4, C.y - l/4, C.z - d/4);
         current->child = new Boite(current->level + 1, P, l/2, w/2, d/2 );
         current->child->sister = new Boite(current->level + 1, Q, l/2, w/2, d/2 );
         current->child->sister->sister = new Boite(current->level + 1, R, l/2, w/2, d/2 );
@@ -62,9 +67,9 @@ Boite first_box(list<Particule> & particules){
     }
     Point3d C(0,0,0);
     B.C = C; 
-    B.l = 2*max_length + 1;
-    B.w = 2*max_width+ 1;
-    B.d= 2*max_depth + 1;
+    B.l = 2*max_length + 2;
+    B.w = 2*max_width+ 2;
+    B.d= 2*max_depth + 2;
     B.calculate_mass(particules);
     B.calculate_center_of_mass(particules);
     B.P = NULL;
