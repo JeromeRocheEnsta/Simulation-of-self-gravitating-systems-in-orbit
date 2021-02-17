@@ -47,6 +47,7 @@ class Particule
   
 };
 
+
 ostream & operator <<(ostream &,Particule&);
 
 
@@ -82,6 +83,9 @@ void print_graph(Boite *);
 Boite first_box(list<Particule> &);
 void force(Particule p, Boite& b, double M);
 
+
+void all_force(Boite * , Boite * );
+void force(Boite * , Boite * );
 
 
 

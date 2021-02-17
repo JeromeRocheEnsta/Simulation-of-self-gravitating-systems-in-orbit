@@ -70,13 +70,16 @@ void force(Particule p, Boite *b, double M)  // M est la masse nd'une particule
             p.F_y=p.F_y-G*b->m*M*(P_term->r_y-p.r_y)/pow(r,3);
             p.F_x=p.F_z-G*b->m*M*(P_term->r_z-p.r_z)/pow(r,3);
         if (b->sister==0){force(p,b->sister,M);};
-    };
+        };
 
     // Sinon on passe a la boite fille
     if (b->child!=0){force(p,b->child,M);};
 
-};
+    };
 }
+
+
+
 
 
 void Particule::initialisation(double M){

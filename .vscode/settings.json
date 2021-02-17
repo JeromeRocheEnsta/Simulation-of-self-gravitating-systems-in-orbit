@@ -5,6 +5,8 @@
         "istream": "cpp",
         "streambuf": "cpp",
         "iostream": "cpp",
-        "list": "cpp"
+        "list": "cpp",
+        "complex": "cpp",
+        "cmath": "cpp"
     }
 }
