@@ -63,7 +63,7 @@ void force(Particule &pr, Boite *b)
                         P_term=b->P;
                         //r est le carré de la distance entre la particule en argument et la particule terminale de la boite
                         r=pow(pr.r_x-P_term->r_x,2)+pow(pr.r_y-P_term->r_y,2)+pow(pr.r_z-P_term->r_z,2); 
-                        if (r<=epsilon){r=epsilon2;};
+                        if (r<=epsilon2){r=epsilon2;};
                         pr.F_x-=G*b->m*pr.m*(P_term->r_x-pr.r_x)/pow(r,3);
                         pr.F_y-=G*b->m*pr.m*(P_term->r_y-pr.r_y)/pow(r,3);
                         pr.F_z-=G*b->m*pr.m*(P_term->r_z-pr.r_z)/pow(r,3);
