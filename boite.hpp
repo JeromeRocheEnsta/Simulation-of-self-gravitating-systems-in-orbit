@@ -81,7 +81,7 @@ void create_graph(Boite *, list<Particule> &);
 ostream & operator <<(ostream &,Boite&);
 void print_graph(Boite *);
 Boite first_box(list<Particule> &);
-void force(Particule p, Boite* b);
+void force(Particule &, Boite* );
 
 
 void all_force(Boite * , Boite *, double epsilon);
