@@ -24,9 +24,9 @@ Boite first_box(const list<Particule> & particules){
                 max_width = abs(it->r_z);
             }
     }
-    B.l = 2*max_length;
-    B.w = 2*max_width;
-    B.d= 2*max_depth;
+    B.l = 50*max_length;
+    B.w = 50*max_width;
+    B.d= 50*max_depth;
     B.calculate_mass(particules);
     B.calculate_center_of_mass(particules);
     B.P = NULL;

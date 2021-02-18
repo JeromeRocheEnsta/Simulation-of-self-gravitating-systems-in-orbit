@@ -38,9 +38,9 @@ Boite first_box(list<Particule> & particules){
     }
     Point3d C(0,0,0);
     B.C = C; 
-    B.l = 2*max_length + 2;
-    B.w = 2*max_width+ 2;
-    B.d= 2*max_depth + 2;
+    B.l = 50*max_length + 2;
+    B.w = 50*max_width+ 2;
+    B.d= 50*max_depth + 2;
     B.calculate_mass(particules);
     B.calculate_center_of_mass(particules);
     B.P = NULL;
@@ -193,54 +193,6 @@ ostream & operator<< (ostream & os, Boite& B){
 ////////////////////////////////
 ////// Calcul des forces ///////
 ////////////////////////////////
-
-
-void all_force(Boite * current, Boite * primal, double epsilon){
-    /*
-    Entrée: 
-        current: est la boîte que l'on traite
-        primal: c'est la boite de niveau 1, on en aura besoin dans le calcul de force afin de parcourir le graph
-    Sortie:
-        Après avoir appliqué cette fonction, on aura calculé toutes les forces gravitationnelle s'appliquant sur toutes nos particules.
-        Etape nécessaire pour faire évoluer notre système
-    */
-
-    // Si c'est une boite terminale avec particule on calcul la force qui s'exerce sur cette particule
-    if(current->P != 0){
-        force(current, primal, epsilon);
-    }
-    // Si c'est pas une boite terminale on parcourt sa fille
-    if(current-> child != 0){
-        all_force(current->child, primal, epsilon);
-    }
-    // Si elle aune soeur on la parcourt aussi
-    if(current->sister != 0){
-        all_force(current->sister, primal, epsilon);
-    }
-}
-
-
-void force(Boite * current, Boite * primal, double epsilon){
-     /*
-    Entrée: 
-        current: est la boîte - contenant une et une seule particule - que l'on traite
-        primal: c'est la boite de niveau 1, on en aura besoin afin de parcourir le graph
-    Sortie:
-        Calcul de la force gravitationnelle s'appliquant à la particule contenu dans current.
-    */
-
-    //Calcul de nos constantes
-    const double G= 6.6742E-11;
-    const double gamma = min(b->l,min(b->w,b->d))/100;
-
-    //Parcourir le graph mais la question c'est comment ?
-    //Pour chaque boite du graph, si la boite est de même niveau que current->level on calcul la force qui s'exerce et on ne considère pas les boites filles
-        //On ajoute la contribution à la force gravitationnelle
-
-   
-
-}
-
 
 
 

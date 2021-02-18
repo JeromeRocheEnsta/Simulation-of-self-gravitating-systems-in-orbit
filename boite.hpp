@@ -38,17 +38,19 @@ class Particule
     double v_x , v_y , v_z;
     double F_x , F_y , F_z;
 
-    Particule(double r_x_=0 ,double r_y_=0, double r_z_=0 ,double m = 0, double v_x_=0,double v_y_=0, double v_z_=0,double F_x_=0,double F_y_=0, double F_z_=0):
+    Particule(double m = 0,double r_x_=0 ,double r_y_=0, double r_z_=0 , double v_x_=0,double v_y_=0, double v_z_=0,double F_x_=0,double F_y_=0, double F_z_=0):
         r_x(r_x_),r_y(r_y_),r_z(r_z_),m(m),v_x(v_x_),v_y(v_y_),v_z(v_z_),F_x(F_x_),F_y(F_y_),F_z(F_z_){}
 
     void generateur();
-    void initialisation (double);
-    void mise_a_jour(double);
+    void initialisation();
+    void mise_a_jour();
   
 };
 
 
 ostream & operator <<(ostream &,Particule&);
+void affichage_by_step(list<Particule>, int ); //Il nous permettra d'afficher l'état de notre sysytème à chaque itérations 
+
 
 
 
@@ -74,6 +76,14 @@ class Boite {
         void find_unique_child(list<Particule> &);
         void calculate_mass(list<Particule> &);
         void calculate_center_of_mass(list<Particule> &);
+        void clear() {
+            delete[] sister;
+            sister =NULL;
+            delete[] child;
+            child =NULL;
+            delete[] P;
+            P=NULL;
+        };
 };
 
 void create_graph(Boite *, list<Particule> &);
@@ -82,10 +92,10 @@ ostream & operator <<(ostream &,Boite&);
 void print_graph(Boite *);
 Boite first_box(list<Particule> &);
 void force(Particule &, Boite* );
+void all_forces(Boite *);
+void global_initialisation(list<Particule>&);
+void global_update(list<Particule>&);
 
-
-void all_force(Boite * , Boite *, double epsilon);
-void force(Boite * , Boite *, double epsilon);
 
 
 
