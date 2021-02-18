@@ -195,7 +195,7 @@ ostream & operator<< (ostream & os, Boite& B){
 ////////////////////////////////
 
 
-void all_force(Boite * current, Boite * primal){
+void all_force(Boite * current, Boite * primal, double epsilon){
     /*
     Entrée: 
         current: est la boîte que l'on traite
@@ -207,20 +207,20 @@ void all_force(Boite * current, Boite * primal){
 
     // Si c'est une boite terminale avec particule on calcul la force qui s'exerce sur cette particule
     if(current->P != 0){
-        force(current, primal);
+        force(current, primal, epsilon);
     }
     // Si c'est pas une boite terminale on parcourt sa fille
     if(current-> child != 0){
-        all_force(current->child, primal);
+        all_force(current->child, primal, epsilon);
     }
     // Si elle aune soeur on la parcourt aussi
     if(current->sister != 0){
-        all_force(current->sister, primal);
+        all_force(current->sister, primal, epsilon);
     }
 }
 
 
-void force(Boite * current, Boite * primal){
+void force(Boite * current, Boite * primal, double epsilon){
      /*
     Entrée: 
         current: est la boîte - contenant une et une seule particule - que l'on traite
@@ -230,8 +230,8 @@ void force(Boite * current, Boite * primal){
     */
 
     //Calcul de nos constantes
-    const double G= 6.6742*pow(10,-11);
-    const double epsilon = min(current->l,min(current->w,current->d))/100;
+    const double G= 6.6742E-11;
+    const double gamma = min(b->l,min(b->w,b->d))/100;
 
     //Parcourir le graph mais la question c'est comment ?
     //Pour chaque boite du graph, si la boite est de même niveau que current->level on calcul la force qui s'exerce et on ne considère pas les boites filles
