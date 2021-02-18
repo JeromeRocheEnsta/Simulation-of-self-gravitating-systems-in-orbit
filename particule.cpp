@@ -40,46 +40,47 @@ void Particule::generateur()
 }
 
 
-void force(Particule p, Boite *b)  // M est la masse nd'une particule
+void force(Particule &pr, Boite *b)  
 {   const double G= 6.6742*pow(10,-11);
-    const double epsilon = min(b->l,min(b->w,b->d))/100;
+    const double epsilon1 = min(b->l,min(b->w,b->d))/100;
+    const double epsilon2 =???;
     Particule *P_term;
     Point3d Centre=b->G;
     double d,r;
-    d=pow(p.r_x-Centre.x,2)+pow(p.r_y-Centre.y,2)+pow(p.r_z-Centre.z,2); //calcul du carre de la distance entre la particule et le centre de la boite
+    d=pow(pr.r_x-Centre.x,2)+pow(pr.r_y-Centre.y,2)+pow(pr.r_z-Centre.z,2);
 
- //Si cette distance est beaucoup plus grande que la distance entre les particules de la boite (sa taille), on fait comme si la boite etait une grande particule,
- // et on passe à la boite soeur
-
-    if (b->l/pow(d,1/2)<epsilon){
-        p.F_x=p.F_x-G*b->m*p.m*(Centre.x-p.r_x)/pow(d,3);
-        p.F_y=p.F_y-G*b->m*p.m*(Centre.y-p.r_y)/pow(d,3);
-        p.F_x=p.F_z-G*b->m*p.m*(Centre.z-p.r_z)/pow(d,3);
-        if (b->sister!=0){force(p,b->sister);};
-        };
-
-   // Si on est face à une boite terminale, et s'il y a une particule dedans, on calcule la force qu'elle exerce sur notre particule,
-   // puis on passe a la soeur (qu'il y ai une particule ou non)
-
-   if (b->child==0){
-        if (b->P!=0){
-            P_term=b->P;
-            r=pow(p.r_x-P_term->r_x,2)+pow(p.r_y-P_term->r_y,2)+pow(p.r_z-P_term->r_z,2); //calcul du carre de la distance entre la particule en argument et la particule terminale de la boite
-            if (r<=epsilon){r=epsilon;};
-            p.F_x=p.F_x-G*b->m*p.m*(P_term->r_x-p.r_x)/pow(r,3);
-            p.F_y=p.F_y-G*b->m*p.m*(P_term->r_y-p.r_y)/pow(r,3);
-            p.F_x=p.F_z-G*b->m*p.m*(P_term->r_z-p.r_z)/pow(r,3);
-        if (b->sister==0){force(p,b->sister);};
-        };
-
-    // Sinon on passe a la boite fille
-    if (b->child!=0){force(p,b->child);};
+//d est le carre de la distance entre la particule et le centre de la boite 
+//si d n'est pas plus grand que la distance entre les particules de la boite, on va entrer dans la boite et calculer la force pour chaque particule dedans
+    if (b->l/pow(d,1/2)>=epsilon1) {
+        if (b->child!=0) {
+                force(pr,b->child);
+                if (b->sister!=0){force(pr,b->sister);}  
+            else {
+                if (b->P==0){                             //Si on est face à une boite terminale sans particule, on passe à la soeur
+                    if (b->sister==0){exit;}              //Si la boite n'a ni soeur ni fille, on a parcourut toutes les boites
+                        else {force(pr,b->sister);}}
+                    else {                               //Alors il y a une particule dans la boite
+                        P_term=b->P;
+                        //r est le carré de la distance entre la particule en argument et la particule terminale de la boite
+                        r=pow(pr.r_x-P_term->r_x,2)+pow(pr.r_y-P_term->r_y,2)+pow(pr.r_z-P_term->r_z,2); 
+                        if (r<=epsilon){r=epsilon2;};
+                        pr.F_x-=G*b->m*pr.m*(P_term->r_x-pr.r_x)/pow(r,3);
+                        pr.F_y-=G*b->m*pr.m*(P_term->r_y-pr.r_y)/pow(r,3);
+                        pr.F_z-=G*b->m*pr.m*(P_term->r_z-pr.r_z)/pow(r,3);
+        if (b->sister!=0){force(pr,b->sister);};
+            };
+        }}
+//Si d  est beaucoup plus grand que la distance entre les particules de la boite (sa taille), on fait comme si la boite etait une grande particule,
+//Et on passe à la boite soeur
+        else {
+            pr.F_x-=G*b->m*pr.m*(Centre.x-pr.r_x)/pow(d,3);
+            pr.F_y-=G*b->m*pr.m*(Centre.y-pr.r_y)/pow(d,3);
+            pr.F_z-=G*b->m*pr.m*(Centre.z-pr.r_z)/pow(d,3);
+            if (b->sister!=0){force(pr,b->sister);};}
 
     };
+
 }
-
-
-
 
 
 void Particule::initialisation(double M){
