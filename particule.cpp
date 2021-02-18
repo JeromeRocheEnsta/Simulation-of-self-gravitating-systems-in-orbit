@@ -40,7 +40,7 @@ void Particule::generateur()
 }
 
 
-void force(Particule p, Boite *b, double M)  // M est la masse nd'une particule
+void force(Particule p, Boite *b)  // M est la masse nd'une particule
 {   const double G= 6.6742*pow(10,-11);
     const double epsilon = min(b->l,min(b->w,b->d))/100;
     Particule *P_term;
@@ -52,10 +52,10 @@ void force(Particule p, Boite *b, double M)  // M est la masse nd'une particule
  // et on passe à la boite soeur
 
     if (b->l/pow(d,1/2)<epsilon){
-        p.F_x=p.F_x-G*b->m*M*(Centre.x-p.r_x)/pow(d,3);
-        p.F_y=p.F_y-G*b->m*M*(Centre.y-p.r_y)/pow(d,3);
-        p.F_x=p.F_z-G*b->m*M*(Centre.z-p.r_z)/pow(d,3);
-        if (b->sister!=0){force(p,b->sister,M);};
+        p.F_x=p.F_x-G*b->m*p.m*(Centre.x-p.r_x)/pow(d,3);
+        p.F_y=p.F_y-G*b->m*p.m*(Centre.y-p.r_y)/pow(d,3);
+        p.F_x=p.F_z-G*b->m*p.m*(Centre.z-p.r_z)/pow(d,3);
+        if (b->sister!=0){force(p,b->sister);};
         };
 
    // Si on est face à une boite terminale, et s'il y a une particule dedans, on calcule la force qu'elle exerce sur notre particule,
@@ -66,14 +66,14 @@ void force(Particule p, Boite *b, double M)  // M est la masse nd'une particule
             P_term=b->P;
             r=pow(p.r_x-P_term->r_x,2)+pow(p.r_y-P_term->r_y,2)+pow(p.r_z-P_term->r_z,2); //calcul du carre de la distance entre la particule en argument et la particule terminale de la boite
             if (r<=epsilon){r=epsilon;};
-            p.F_x=p.F_x-G*b->m*M*(P_term->r_x-p.r_x)/pow(r,3);
-            p.F_y=p.F_y-G*b->m*M*(P_term->r_y-p.r_y)/pow(r,3);
-            p.F_x=p.F_z-G*b->m*M*(P_term->r_z-p.r_z)/pow(r,3);
-        if (b->sister==0){force(p,b->sister,M);};
+            p.F_x=p.F_x-G*b->m*p.m*(P_term->r_x-p.r_x)/pow(r,3);
+            p.F_y=p.F_y-G*b->m*p.m*(P_term->r_y-p.r_y)/pow(r,3);
+            p.F_x=p.F_z-G*b->m*p.m*(P_term->r_z-p.r_z)/pow(r,3);
+        if (b->sister==0){force(p,b->sister);};
         };
 
     // Sinon on passe a la boite fille
-    if (b->child!=0){force(p,b->child,M);};
+    if (b->child!=0){force(p,b->child);};
 
     };
 }
