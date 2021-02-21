@@ -42,10 +42,10 @@ void Particule::generateur()
 }
 
 
-void force(Particule &pr, Boite *b)  // M est la masse d'une particule
+void force(Particule & pr, Boite *b)  // M est la masse d'une particule
 {   const double G= 6.6742E-11;
-    const double epsilon1 = min(b->l,min(b->w,b->d))/100;
-    const double epsilon2 = 1;
+    const double epsilon1 = min(b->l,min(b->w,b->d))*10; //distance négligeable devant 
+    const double epsilon2 = 1E-4; //facteur d'adoucissement
     Particule *P_term;
     Point3d Centre=b->G;
     double d,r;
@@ -54,43 +54,46 @@ void force(Particule &pr, Boite *b)  // M est la masse d'une particule
     /*calcul du carre de la distance entre la particule et le centre de la boite
     Si cette distance est beaucoup plus grande que la distance entre les particules de la boite (sa taille), on fait comme si la boite etait une grande particule,
     et on passe à la boite soeur*/
-
-    if (b->l/pow(d,1/2)>=epsilon1) {
-        if (b->child!=0) {
-                force(pr,b->child);
-                if (b->sister==0){exit;}
-                else {force(pr,b->sister);}
+    cout<<b->level<<" ";
+    if (pow(d, 1/2) < epsilon1) {
+        if (b->child==0){
+            if (b->P != 0){
+                
+                P_term = b->P;
+                r = pow(pr.r_x-P_term->r_x,2) + pow(pr.r_y-P_term->r_y,2) + pow(pr.r_z-P_term->r_z,2); //calcul du carre de la distance entre la particule en argument et la particule terminale de la boite
+                if (r<=epsilon2){r=epsilon2;};
+                pr.F_x -= G * b->m * pr.m * (P_term->r_x - pr.r_x) / pow(r,3/2);
+                pr.F_y -= G * b->m * pr.m * (P_term->r_y - pr.r_y) / pow(r,3/2);
+                pr.F_z -= G * b->m * pr.m * (P_term->r_z - pr.r_z) / pow(r,3/2);
+                
+            }
         }
-        else {
-            if (b->P==0){
-                if (b->sister==0){exit;}
-                    else {force(pr,b->sister);}
-            }
-                else {
-                    P_term=b->P;
-                    r=pow(pr.r_x-P_term->r_x,2)+pow(pr.r_y-P_term->r_y,2)+pow(pr.r_z-P_term->r_z,2); //calcul du carre de la distance entre la particule en argument et la particule terminale de la boite
-                    if (r<=epsilon2){r=epsilon2;};
-                    pr.F_x-=G*b->m*pr.m*(P_term->r_x-pr.r_x)/pow(r,3);
-                    pr.F_y-=G*b->m*pr.m*(P_term->r_y-pr.r_y)/pow(r,3);
-                    pr.F_z-=G*b->m*pr.m*(P_term->r_z-pr.r_z)/pow(r,3);
-                    if (b->sister!=0){force(pr,b->sister);}
-                }
-            }
+        else{
+            force(pr,b->child);
+        }
     }
     else {
-        pr.F_x-=G*b->m*pr.m*(Centre.x-pr.r_x)/pow(d,3);
-        pr.F_y-=G*b->m*pr.m*(Centre.y-pr.r_y)/pow(d,3);
-        pr.F_x-=G*b->m*pr.m*(Centre.z-pr.r_z)/pow(d,3);
-        if (b->sister!=0){force(pr,b->sister);};
+        pr.F_x -= G * b->m * pr.m * (Centre.x - pr.r_x) / pow(d,3/2);
+        pr.F_y -= G * b->m * pr.m * (Centre.y - pr.r_y) / pow(d,3/2);
+        pr.F_z -= G * b->m * pr.m * (Centre.z - pr.r_z) / pow(d,3/2);
+
+        if(b->child != 0){
+            force(pr,b->child);
+        }
     }
 
+
+    //Boucle de récursion
+    if (b->sister!=0){
+        force(pr,b->sister);
+    }
 }
 
 
 /////////////////////////////////////////////////
 ////Calcul de la valeur de chaque force/////////
 ////////////////////////////////////////////////
-void all_forces(Boite * primal){
+void all_forces(Boite * primal, Boite * current){
     /*
     Entrée: 
         primal: c'est la boite de niveau 1, on en aura besoin dans le calcul de force afin de parcourir le graph
@@ -99,18 +102,18 @@ void all_forces(Boite * primal){
         Etape nécessaire pour faire évoluer notre système
     */
    //Si c'est une boite terminale avec une seule particule on calcule la force 
-   if (primal->P != NULL){
-       force(*primal->P, primal);
+   if (current->P != NULL){
+       force(*current->P, primal);
    }
 
    //Sinon on vérifie si elle a un enfant et on fait le calcul
-   if(primal->child != NULL){
-       all_forces(primal->child);
+   if(current->child != NULL){
+       all_forces(primal ,current->child);
    }
 
    // En meme temps on regarde pour ces soeurs 
-   if(primal->sister != NULL){
-       all_forces(primal->sister);
+   if(current->sister != NULL){
+       all_forces(primal, current->sister);
    }
 
 }

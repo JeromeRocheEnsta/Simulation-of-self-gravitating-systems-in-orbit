@@ -38,9 +38,9 @@ Boite first_box(list<Particule> & particules){
     }
     Point3d C(0,0,0);
     B.C = C; 
-    B.l = 50*max_length + 2;
-    B.w = 50*max_width+ 2;
-    B.d= 50*max_depth + 2;
+    B.l = 2*max_length + 2;
+    B.w = 2*max_width+ 2;
+    B.d= 2*max_depth + 2;
     B.calculate_mass(particules);
     B.calculate_center_of_mass(particules);
     B.P = NULL;
