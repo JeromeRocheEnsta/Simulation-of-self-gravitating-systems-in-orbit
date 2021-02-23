@@ -54,7 +54,6 @@ void force(Particule & pr, Boite *b)  // M est la masse d'une particule
     /*calcul du carre de la distance entre la particule et le centre de la boite
     Si cette distance est beaucoup plus grande que la distance entre les particules de la boite (sa taille), on fait comme si la boite etait une grande particule,
     et on passe à la boite soeur*/
-    cout<<b->level<<" ";
     if (pow(d, 1/2) < epsilon1) {
         if (b->child==0){
             if (b->P != 0){
@@ -93,6 +92,7 @@ void force(Particule & pr, Boite *b)  // M est la masse d'une particule
 /////////////////////////////////////////////////
 ////Calcul de la valeur de chaque force/////////
 ////////////////////////////////////////////////
+
 void all_forces(Boite * primal, Boite * current){
     /*
     Entrée: 
@@ -120,7 +120,7 @@ void all_forces(Boite * primal, Boite * current){
 
 
 void Particule::initialisation(){
-    double t=1E-3;
+    double t=1E-2;
     v_x=v_x+t*F_x/2*m;
     v_y=v_y+t*F_y/2*m;
     v_z=v_z+t*F_z/2*m; //J'ai changé r_x en v_x etc.. c'était pas homogène 
@@ -130,7 +130,7 @@ void Particule::initialisation(){
 
 void Particule::mise_a_jour(){
     int test=1;
-    double t=1E-3;
+    double t=1E-2;
     switch (test){
         case 0:
             v_x=r_x+t*F_x/m;
@@ -149,6 +149,7 @@ void Particule::mise_a_jour(){
 
     }
 }
+
 
 void global_initialisation(list<Particule> & particules){
     /*
@@ -181,12 +182,13 @@ ostream & operator<< (ostream & os, Particule& p)
 
 //Fonction qui nous permet de montrer l'état du sytème à chaque itérations 
 void affichage_by_step(list<Particule> particules, int k ){
-    cout<<"--------------------------------------------------------------------------------------\n"<<endl;
+   
+    //cout<<"--------------------------------------------------------------------------------------\n"<<endl;
     cout<<"Itérations"<<k<<"\n"<<endl; 
-    list<Particule>::iterator it =particules.begin();
-    int i=0;
-    for(;it!=particules.end();it ++){
-        cout<<"Particule "<<i<<": \t x="<< it->r_x <<"\t y="<< it->r_y << "\t z="<< it->r_z<<"\n"<<endl;
-        i += 1;
-    }
+    //list<Particule>::iterator it =particules.begin();
+    //int i=0;
+    //for(;it!=particules.end();it ++){
+        //cout<<"Particule "<<i<<": \t x="<< it->r_x <<"\t y="<< it->r_y << "\t z="<< it->r_z<<"\n"<<endl;
+        //i += 1;
+    //}
 }
