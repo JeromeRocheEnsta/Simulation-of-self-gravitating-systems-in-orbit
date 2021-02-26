@@ -42,41 +42,57 @@ void Particule::generateur()
 }
 
 
-void force(Particule & pr, Boite *b)  // M est la masse d'une particule
-{   const double G= 6.6742E-11;
-    const double epsilon1 = min(b->l,min(b->w,b->d))*10; //distance négligeable devant 
-    const double epsilon2 = 1E-4; //facteur d'adoucissement
+////////////////////////////////////////////////
+////Calcul de la valeur force sur 1 particule///
+////////////////////////////////////////////////
+
+
+
+void force(Particule & pr, Boite *b){
+    /*
+        On va parcourir le graph pour calculer la force totale s'applquant à la particule pr. 
+        Cette fonction est récursive et son premier appel doit être avec la boite primal du graph
+        entrée: Référence sur la particule considéré + Boite que l'on parcours actuellement dans le graphe
+        sortie: rien on met à jour la force boîte après boîte.
+    */
+    const double G= 6.6742E-11;
+    const double epsilon1 = max(b->l,max(b->w,b->d)); //distance négligeable devant 
+    const double epsilon2 = 1E-2; //facteur d'adoucissement
     Particule *P_term;
     Point3d Centre=b->G;
     double d,r;
     d=pow(pr.r_x-Centre.x,2)+pow(pr.r_y-Centre.y,2)+pow(pr.r_z-Centre.z,2);
 
-    /*calcul du carre de la distance entre la particule et le centre de la boite
-    Si cette distance est beaucoup plus grande que la distance entre les particules de la boite (sa taille), on fait comme si la boite etait une grande particule,
-    et on passe à la boite soeur*/
-    if (pow(d, 1/2) < epsilon1) {
-        if (b->child==0){
-            if (b->P != 0){
-                
-                P_term = b->P;
-                r = pow(pr.r_x-P_term->r_x,2) + pow(pr.r_y-P_term->r_y,2) + pow(pr.r_z-P_term->r_z,2); //calcul du carre de la distance entre la particule en argument et la particule terminale de la boite
-                if (r<=epsilon2){r=epsilon2;};
-                pr.F_x -= G * b->m * pr.m * (P_term->r_x - pr.r_x) / pow(r,3/2);
-                pr.F_y -= G * b->m * pr.m * (P_term->r_y - pr.r_y) / pow(r,3/2);
-                pr.F_z -= G * b->m * pr.m * (P_term->r_z - pr.r_z) / pow(r,3/2);
-                
-            }
-        }
-        else{
+    /*Calcul de la distance entre le centre G de la boite et la particule que l'on traite
+    Si cette distance/100 est plus grande que epsilon1 on est dans le cas où la distance entre les particules compris dans la boite b 
+    est très petite devant la distance à notre particule*/
+    if (epsilon1 < pow(d, 1/2)/10 ){
+
+        //facteur d'adoucissement
+        if (d<=epsilon2){d=epsilon2;}
+        pr.F_x += G * b->m * pr.m * (Centre.x - pr.r_x) / pow(d,3/2);
+        pr.F_y += G * b->m * pr.m * (Centre.y - pr.r_y) / pow(d,3/2);
+        pr.F_z += G * b->m * pr.m * (Centre.z - pr.r_z) / pow(d,3/2);
+        //Boucle de récursion
+        if(b->child != 0){
             force(pr,b->child);
         }
     }
-    else {
-        pr.F_x -= G * b->m * pr.m * (Centre.x - pr.r_x) / pow(d,3/2);
-        pr.F_y -= G * b->m * pr.m * (Centre.y - pr.r_y) / pow(d,3/2);
-        pr.F_z -= G * b->m * pr.m * (Centre.z - pr.r_z) / pow(d,3/2);
-
-        if(b->child != 0){
+    else{
+        if (b->child==0){
+            if (b->P != 0 && b->P != &pr){
+                //cout<<"on calcule"<<endl;
+                P_term = b->P;
+                r = pow(pr.r_x-P_term->r_x,2) + pow(pr.r_y-P_term->r_y,2) + pow(pr.r_z-P_term->r_z,2); //calcul du carre de la distance entre la particule en argument et la particule terminale de la boite
+                //facteur d'adoucissement
+                if (r<=epsilon2){r=epsilon2;}
+                pr.F_x += G * b->m * pr.m * (P_term->r_x - pr.r_x) / pow(r,3/2);
+                pr.F_y += G * b->m * pr.m * (P_term->r_y - pr.r_y) / pow(r,3/2);
+                pr.F_z += G * b->m * pr.m * (P_term->r_z - pr.r_z) / pow(r,3/2);
+            }
+        }
+        //Boucle de récursion
+        else{
             force(pr,b->child);
         }
     }
@@ -93,16 +109,27 @@ void force(Particule & pr, Boite *b)  // M est la masse d'une particule
 ////Calcul de la valeur de chaque force/////////
 ////////////////////////////////////////////////
 
+/*
+On peut faire beaucoup mieux en changeant current par particules ainsi on parcours seulement la liste des particules plutôt que le graph....
+*/
 void all_forces(Boite * primal, Boite * current){
     /*
+    Parcours du graphe afin de traiter toutes les particules
     Entrée: 
         primal: c'est la boite de niveau 1, on en aura besoin dans le calcul de force afin de parcourir le graph
+        current: Boite que l'on traite actuellement.
     Sortie:
         Après avoir appliqué cette fonction, on aura calculé toutes les forces gravitationnelle s'appliquant sur toutes nos particules.
         Etape nécessaire pour faire évoluer notre système
     */
    //Si c'est une boite terminale avec une seule particule on calcule la force 
    if (current->P != NULL){
+       //cout<<"Coucou"<<endl;
+       //cout<<*current->P<<endl;
+       //Remise à zéro des forces !
+       current->P->F_x = 0;
+       current->P->F_y = 0;
+       current->P->F_z = 0;
        force(*current->P, primal);
    }
 
@@ -119,6 +146,11 @@ void all_forces(Boite * primal, Boite * current){
 }
 
 
+
+//////////////////////////////////////////
+///////Vitesse initiale des particules////
+//////////////////////////////////////////
+
 void Particule::initialisation(){
     double t=1E-2;
     v_x=v_x+t*F_x/2*m;
@@ -126,7 +158,21 @@ void Particule::initialisation(){
     v_z=v_z+t*F_z/2*m; //J'ai changé r_x en v_x etc.. c'était pas homogène 
 }
 
+void global_initialisation(list<Particule> & particules){
+    /*
+        entrée: liste de particules qu'on initialisera leur vitesse initiale
+        sortie: rien on modifie les vitesses 
+    */
+    list<Particule>::iterator  it=particules.begin();
+     for(;it!= particules.end();it++){
+         it->initialisation();
+     }
+}
 
+
+//////////////////////////////
+///////Schéma saute-mouton////
+//////////////////////////////
 
 void Particule::mise_a_jour(){
     int test=1;
@@ -150,17 +196,6 @@ void Particule::mise_a_jour(){
     }
 }
 
-
-void global_initialisation(list<Particule> & particules){
-    /*
-        entrée: liste de particules qu'on initialisera leur vitesse initiale
-        sortie: rien on modifie les vitesses 
-    */
-    list<Particule>::iterator  it=particules.begin();
-     for(;it!= particules.end();it++){
-         it->initialisation();
-     }
-}
 
 void global_update(list<Particule> & particules){
     /*
