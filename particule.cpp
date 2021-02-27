@@ -66,30 +66,24 @@ void force(Particule & pr, Boite *b){
     /*Calcul de la distance entre le centre G de la boite et la particule que l'on traite
     Si cette distance/100 est plus grande que epsilon1 on est dans le cas où la distance entre les particules compris dans la boite b 
     est très petite devant la distance à notre particule*/
-    if (epsilon1 < pow(d, 1/2)/10 ){
-        //cout<<"Approximation"<<endl;
+    if (epsilon1 < sqrt(d)/10 ){
         //facteur d'adoucissement
         if (d<=epsilon2){d=epsilon2;}
-        pr.F_x += G * b->m * pr.m * (Centre.x - pr.r_x) / pow(d,3/2);
-        pr.F_y += G * b->m * pr.m * (Centre.y - pr.r_y) / pow(d,3/2);
-        pr.F_z += G * b->m * pr.m * (Centre.z - pr.r_z) / pow(d,3/2);
-        //Boucle de récursion
-        if(b->child != 0){
-            force(pr,b->child);
-        }
+        pr.F_x += G * b->m * pr.m * (Centre.x - pr.r_x) / sqrt(pow(d,3));
+        pr.F_y += G * b->m * pr.m * (Centre.y - pr.r_y) / sqrt(pow(d,3));
+        pr.F_z += G * b->m * pr.m * (Centre.z - pr.r_z) / sqrt(pow(d,3));
+        //Pas de boucle car on ne s'intéresse pas aux enfants
     }
     else{
         if (b->child==0){
             if (b->P != 0 && b->P != &pr){
-                //cout<<"on calcule"<<endl;
                 P_term = b->P;
                 r = pow(pr.r_x-P_term->r_x,2) + pow(pr.r_y-P_term->r_y,2) + pow(pr.r_z-P_term->r_z,2); //calcul du carre de la distance entre la particule en argument et la particule terminale de la boite
                 //facteur d'adoucissement
                 if (r<=epsilon2){r=epsilon2;}
-                pr.F_x += G * b->m * pr.m * (P_term->r_x - pr.r_x) / pow(r,3/2);
-                pr.F_y += G * b->m * pr.m * (P_term->r_y - pr.r_y) / pow(r,3/2);
-                pr.F_z += G * b->m * pr.m * (P_term->r_z - pr.r_z) / pow(r,3/2);
-                //cout<<pr.F_x<<endl;
+                pr.F_x += G * P_term->m * pr.m * (P_term->r_x - pr.r_x) / sqrt(pow(d,3));
+                pr.F_y += G * P_term->m * pr.m * (P_term->r_y - pr.r_y) / sqrt(pow(d,3));
+                pr.F_z += G * P_term->m * pr.m * (P_term->r_z - pr.r_z) / sqrt(pow(d,3));
             }
         }
         //Boucle de récursion
@@ -125,8 +119,6 @@ void all_forces(Boite * primal, Boite * current){
     */
    //Si c'est une boite terminale avec une seule particule on calcule la force 
    if (current->P != NULL){
-       //cout<<"Coucou"<<endl;
-       //cout<<*current->P<<endl;
        //Remise à zéro des forces !
        current->P->F_x = 0;
        current->P->F_y = 0;
