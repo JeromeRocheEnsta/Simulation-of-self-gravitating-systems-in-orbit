@@ -67,7 +67,7 @@ void force(Particule & pr, Boite *b){
     Si cette distance/100 est plus grande que epsilon1 on est dans le cas où la distance entre les particules compris dans la boite b 
     est très petite devant la distance à notre particule*/
     if (epsilon1 < pow(d, 1/2)/10 ){
-
+        //cout<<"Approximation"<<endl;
         //facteur d'adoucissement
         if (d<=epsilon2){d=epsilon2;}
         pr.F_x += G * b->m * pr.m * (Centre.x - pr.r_x) / pow(d,3/2);
@@ -89,6 +89,7 @@ void force(Particule & pr, Boite *b){
                 pr.F_x += G * b->m * pr.m * (P_term->r_x - pr.r_x) / pow(r,3/2);
                 pr.F_y += G * b->m * pr.m * (P_term->r_y - pr.r_y) / pow(r,3/2);
                 pr.F_z += G * b->m * pr.m * (P_term->r_z - pr.r_z) / pow(r,3/2);
+                //cout<<pr.F_x<<endl;
             }
         }
         //Boucle de récursion

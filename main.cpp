@@ -12,6 +12,11 @@ using namespace std;
 int main(int argc, char const *argv[])
 {
     /*
+    //Ca ne fait pas l'approximation... il faut réussir à appliquer l'approximation et on doit obtenir:
+    //- 8.34e-12
+    //6.67e-07
+    //-6.67e-07
+
     Particule P1(1,0, 0, 0, 0);
     Particule P2(10000,80000, 0, 0, 0,0);
     Particule P3(1,80001,0,0,0,0,0);
@@ -22,12 +27,16 @@ int main(int argc, char const *argv[])
     Boite primal;
     primal = first_box(particules);
     create_graph(&primal, particules);
-    print_graph(&primal);
+    //print_graph(&primal);
     all_forces(&primal, &primal);
-    cout<<particules.end()->F_x<<endl;
+    list<Particule>::iterator it =particules.begin();
+    for(;it!=particules.end();it ++){
+        cout<<it->F_x<<endl;
+    }
     */
-
-   
+    
+    
+    
     ofstream fichier("resultats.txt", ios::out| ios::trunc);
     if (fichier){
         Particule P1(100000000000,0, 0, 0, 0);
@@ -69,7 +78,7 @@ int main(int argc, char const *argv[])
     else{
        cerr << "Cannot open the file" << endl;
     } 
- 
+    
     
     //cout<<Test<<endl;
     
