@@ -12,6 +12,7 @@ using namespace std;
 int main(int argc, char const *argv[]){
     
     /*
+    //Tests fonctions force
     Particule P1(1,0, 0, 0, 0);
     Particule P2(10000,80000, 0, 0, 0,0);
     Particule P3(1,80001,0,0,0,0,0);
@@ -29,8 +30,19 @@ int main(int argc, char const *argv[]){
         cout<<*it<<endl;
     }
     */
+
+   
+   //Tests génération modèle de Plummer
+    list<Particule> particules;
+    particules = generateur_plummer(5);
+    list<Particule>::iterator it =particules.begin();
+    for(;it!=particules.end();it ++){
+        cout<<*it<<endl;
+    }
+
+   
     
-    
+    /*
     ofstream fichier("resultats.txt", ios::out| ios::trunc);
     if (fichier){
         Particule P1(100000000000,0, 0, 0, 0);
@@ -71,7 +83,7 @@ int main(int argc, char const *argv[]){
     else{
        cerr << "Cannot open the file" << endl;
     } 
-    
+    */
     
     //cout<<Test<<endl;
     
