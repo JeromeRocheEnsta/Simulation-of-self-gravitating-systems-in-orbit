@@ -26,17 +26,18 @@ for i=1:Nb_particules
         xmax = max(abs(dynamique_x(i,:)));
     end
     if ymax< max(abs(dynamique_x(i,:)))
-        ymax = max(abs(dynamique_y(i,:)));
+        ymax = max(abs(dynamique_y(i,:)))+1;
     end
 end
 
 for j=2:N_steps+1
-    for i=1:N_part
+    for i=1:Nb_particules
        plot(dynamique_x(i,j),dynamique_y(i,j),'k.','MarkerSize',10);
-       xlim([-xmax*0.05 xmax*0.05])
-       ylim([-ymax*0.05 ymax*0.05])
+       
+       xlim([-10; 110])
+       ylim([-ymax; ymax])
        hold on;
-    end 
+    end
     drawnow;  hold off; 
     pause(0.1);
 end

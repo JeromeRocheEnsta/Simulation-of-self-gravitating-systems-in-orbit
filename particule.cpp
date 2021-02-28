@@ -110,9 +110,9 @@ void force(Particule & pr, Boite *b){
                 r = pow(pr.r_x-P_term->r_x,2) + pow(pr.r_y-P_term->r_y,2) + pow(pr.r_z-P_term->r_z,2); //calcul du carre de la distance entre la particule en argument et la particule terminale de la boite
                 //facteur d'adoucissement
                 if (r<=epsilon2){r=epsilon2;}
-                pr.F_x += G * P_term->m * pr.m * (P_term->r_x - pr.r_x) / sqrt(pow(d,3));
-                pr.F_y += G * P_term->m * pr.m * (P_term->r_y - pr.r_y) / sqrt(pow(d,3));
-                pr.F_z += G * P_term->m * pr.m * (P_term->r_z - pr.r_z) / sqrt(pow(d,3));
+                pr.F_x += G * P_term->m * pr.m * (P_term->r_x - pr.r_x) / sqrt(pow(r,3));
+                pr.F_y += G * P_term->m * pr.m * (P_term->r_y - pr.r_y) / sqrt(pow(r,3));
+                pr.F_z += G * P_term->m * pr.m * (P_term->r_z - pr.r_z) / sqrt(pow(r,3));
             }
         }
         //Boucle de récursion
@@ -175,9 +175,9 @@ void all_forces(Boite * primal, Boite * current){
 
 void Particule::initialisation(){
     double t=1E-2;
-    v_x=v_x+t*F_x/2*m;
-    v_y=v_y+t*F_y/2*m;
-    v_z=v_z+t*F_z/2*m; //J'ai changé r_x en v_x etc.. c'était pas homogène 
+    v_x=v_x+t*F_x/(2*m);
+    v_y=v_y+t*F_y/(2*m);
+    v_z=v_z+t*F_z/(2*m); //J'ai changé r_x en v_x etc.. c'était pas homogène
 }
 
 void global_initialisation(list<Particule> & particules){
@@ -197,25 +197,13 @@ void global_initialisation(list<Particule> & particules){
 //////////////////////////////
 
 void Particule::mise_a_jour(){
-    int test=1;
     double t=1E-2;
-    switch (test){
-        case 0:
-            v_x=r_x+t*F_x/m;
-            v_y=r_y+t*F_y/m;
-            v_z=r_z+t*F_z/m;
-            r_x=r_x+t*v_x;
-            r_y=r_y+t*v_y;
-            r_z=r_z+t*v_z;
-        case 1:
-            v_x=v_x+t*F_x/m;
-            v_y=v_y+t*F_y/m;
-            v_z=v_z+t*F_z/m;
-            r_x=r_x+t*v_x;
-            r_y=r_y+t*v_y;
-            r_z=r_z+t*v_z;
-
-    }
+    v_x=v_x+t*F_x/m;
+    v_y=v_y+t*F_y/m;
+    v_z=v_z+t*F_z/m;
+    r_x=r_x+t*v_x;
+    r_y=r_y+t*v_y;
+    r_z=r_z+t*v_z;
 }
 
 
