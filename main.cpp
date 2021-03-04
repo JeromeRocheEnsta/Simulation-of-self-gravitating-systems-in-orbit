@@ -55,7 +55,7 @@ int main(int argc, char const *argv[]){
     */
    
     
-    
+    /*
     ofstream fichier("resultats.txt", ios::out| ios::trunc);
     if (fichier){
         Particule P1(1,0, 0, 0, 0);
@@ -94,9 +94,31 @@ int main(int argc, char const *argv[]){
     else{
        cerr << "Cannot open the file" << endl;
     } 
-    
+    */
+
+
+
+    //Test des fonctionnalités
+
     
     //cout<<Test<<endl;
+    Particule P1(1,0, 0, 0, 0);
+    Particule P2(1000000000000,80000, 0, 0, 0,0);
+    Particule P3(1,80001,0,0,0,0,0);
+    list<Particule> particules;
+    particules.push_back(P1);
+    particules.push_back(P2);
+    particules.push_back(P3);
+    Boite primal;
+    primal = first_box(particules);
+    create_graph(&primal, particules);
+    cout<<primal<<endl;
+    particules.begin()->r_x = 100000000;
+    graph_update(&primal, &primal, particules);
+    //print_graph(&primal);
     
+
+
+
     return 0;
 }

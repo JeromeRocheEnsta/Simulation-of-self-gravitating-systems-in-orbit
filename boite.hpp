@@ -52,7 +52,6 @@ void affichage_by_step(list<Particule>, int ); //Il nous permettra d'afficher l'
 
 
 
-
 //CLass Boite
 class Boite {
     public:
@@ -66,10 +65,22 @@ class Boite {
         Particule * P; // Pointer on the only particule remaining in the boite
         Boite * sister; 
         Boite * child;
+        Boite * mother;
         //Constructeur
         Boite() {sister=NULL; child=NULL;};
         Boite(list<Particule> &){sister=NULL; child=NULL;};
-        Boite(int lev, Point3d center, double length, double width, double depth){level= lev; C=center; l=length; w=width; d=depth;};
+        Boite(int lev, Point3d center, double length, double width, double depth, Boite* mother = NULL){level= lev; C=center; l=length; w=width; d=depth; mother = mother;};
+        ~Boite(){
+            if(sister != nullptr){
+                delete[] sister;
+            }
+            if(child != nullptr){
+                delete[] child;
+            }
+            if(mother != nullptr){
+                delete[] mother;
+            }
+        };
         //Method
         int check_number(list<Particule> &); // return number of particules in th boite
         void find_unique_child(list<Particule> &);
@@ -94,7 +105,8 @@ void force(Particule &, Boite* );
 void all_forces(Boite *, Boite *);
 void global_initialisation(list<Particule>&);
 void global_update(list<Particule>&);
-
+void graph_update(Boite *, Boite *, list<Particule> &);
+void global_clear(Boite *);
 
 
 

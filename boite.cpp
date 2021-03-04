@@ -44,6 +44,7 @@ Boite first_box(list<Particule> & particules){
     B.calculate_mass(particules);
     B.calculate_center_of_mass(particules);
     B.P = NULL;
+    B.mother = NULL;
     return B;
 
 };
@@ -84,14 +85,24 @@ void create_graph(Boite* current,list<Particule> & particules){
         double d = current->d;
         Point3d C = current->C;
         Point3d P(C.x - w/4, C.y + l/4,C.z - d/4),Q(C.x + w/4, C.y + l/4, C.z - d/4),R(C.x + w/4, C.y - l/4, C.z - d/4),S(C.x - w/4, C.y - l/4, C.z - d/4),T(C.x - w/4, C.y + l/4,C.z + d/4),U(C.x + w/4, C.y + l/4, C.z + d/4),V(C.x + w/4, C.y - l/4, C.z + d/4),W(C.x - w/4, C.y - l/4, C.z + d/4);
-        current->child = new Boite(current->level + 1, P, l/2, w/2, d/2 );
+        
+        current->child = new Boite(current->level + 1, P, l/2, w/2, d/2);
+        current->child->mother = current;
+        //cout<<current<<" "<<current->child->mother<<endl;
         current->child->sister = new Boite(current->level + 1, Q, l/2, w/2, d/2 );
+        current->child->sister->mother= current;
         current->child->sister->sister = new Boite(current->level + 1, R, l/2, w/2, d/2 );
+        current->child->sister->sister->mother = current;
         current->child->sister->sister->sister = new Boite(current->level + 1, S, l/2, w/2, d/2 );
+        current->child->sister->sister->sister->mother = current;
         current->child->sister->sister->sister->sister = new Boite(current->level + 1, T, l/2, w/2, d/2 );
+        current->child->sister->sister->sister->sister->mother = current;
         current->child->sister->sister->sister->sister->sister = new Boite(current->level + 1, U, l/2, w/2, d/2 );
+        current->child->sister->sister->sister->sister->sister->mother = current;
         current->child->sister->sister->sister->sister->sister->sister = new Boite(current->level + 1, V, l/2, w/2, d/2 );
+        current->child->sister->sister->sister->sister->sister->sister->mother = current;
         current->child->sister->sister->sister->sister->sister->sister->sister = new Boite(current->level + 1, W, l/2, w/2, d/2 );
+        current->child->sister->sister->sister->sister->sister->sister->sister->mother = current;
         //Appliquer la fonction à la soeur et à la première fille
         if(current->sister != 0){
             create_graph( current->sister, particules);
@@ -190,9 +201,19 @@ ostream & operator<< (ostream & os, Boite& B){
 }
 
 
-////////////////////////////////
-////// Calcul des forces ///////
-////////////////////////////////
+
+void global_clear(Boite * current){
+    if(current->sister != NULL){
+        global_clear(current->sister);
+    }
+    if(current->child != NULL){
+        global_clear(current->child);
+    }
+    if(current->level != 1){
+        //current->clear();
+        delete current;
+    }
+}
 
 
 

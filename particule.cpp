@@ -220,6 +220,52 @@ void global_update(list<Particule> & particules){
 }
 
 
+
+//////////////////////////////
+///////Update du Graphe //////
+//////////////////////////////
+void graph_update(Boite * primal, Boite * current, list<Particule> & particules){
+    if(current->P != 0){
+        if(current->sister != 0){
+            graph_update(primal, current->sister, particules);
+        }
+        //On applique la mise à jour
+        //Si la particule sort du cadre
+        cout<<current->P->r_x<<endl;
+        if( (current->P->r_x < primal->C.x - primal->w/2) || (current->P->r_x >= primal->C.x + primal->w / 2) || (current->P->r_y < primal->C.y - primal->l / 2) || (current->P->r_y >= primal->C.y + primal->l / 2) || (current->P->r_z < primal->C.z - primal->d / 2) || (current->P->r_z >= primal->C.z + primal->d / 2) ){
+            cout<<"COUCOU"<<endl;
+            Boite primal_new; 
+            primal_new = first_box(particules);
+            //clear le primal
+
+            /* GROS PROBLEME DE GESTION DE MEMOIRE*/
+            
+            cout<<*(primal->child->sister)<<endl;
+            global_clear(primal);
+            cout<<*(primal->child->sister)<<endl;
+            primal = &primal_new;
+            create_graph(primal, particules);
+        }
+        else{
+            if( (current->P->r_x < current->C.x - current->w / 2) && (current->P->r_x >= current->C.x + current->w / 2) && (current->P->r_y < current->C.y - current->l / 2) && (current->P->r_y >= current->C.y + current->l / 2) && (current->P->r_z < current->C.z - current->d / 2) && (current->P->r_z >= current->C.z + current->d / 2) ){
+                //suppression
+                //ajout
+            }
+        }
+    }
+    else{
+        if(current->child != 0){
+            graph_update(primal, current->child, particules);
+        }
+        if(current->sister != 0){
+            graph_update(primal, current->sister, particules);
+        }
+    }
+}
+
+
+
+
 ostream & operator<< (ostream & os, Particule& p)
 {   os<<"masse:"<<p.m<<"\nposition:("<<p.r_x<<","<<p.r_y<<","<<p.r_z<<")\n vitesse:("<<p.v_x<<","<<p.v_y<<","<<p.v_z<<") \n Force:("<<p.F_x<<","<<p.F_y<<","<<p.F_z<<")";
     return os;}
