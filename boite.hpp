@@ -66,20 +66,21 @@ class Boite {
         Boite * sister; 
         Boite * child;
         Boite * mother;
+        //First Box
         //Constructeur
-        Boite() {sister=NULL; child=NULL;};
-        Boite(list<Particule> &){sister=NULL; child=NULL;};
+        Boite() {sister=NULL; child=NULL; mother=NULL;};
+        Boite(list<Particule> & particules){sister=NULL; child=NULL; mother= NULL;};
         Boite(int lev, Point3d center, double length, double width, double depth, Boite* mother = NULL){level= lev; C=center; l=length; w=width; d=depth; mother = mother;};
+        //Constructeur par copie
+        Boite(const Boite & b){level = b.level; C = b.C; l= b.l; w=b.w; d=b.d; mother=b.mother; G= b.G; m= b.m; P= b.P; sister= b.sister; child= b.child;};
+        //Destructeur
         ~Boite(){
-            if(sister != nullptr){
-                delete[] sister;
-            }
-            if(child != nullptr){
-                delete[] child;
-            }
-            if(mother != nullptr){
-                delete[] mother;
-            }
+            delete sister;
+            sister = 0;
+            delete child;
+            child = 0;
+            P = 0;
+            mother = 0;
         };
         //Method
         int check_number(list<Particule> &); // return number of particules in th boite
@@ -100,12 +101,14 @@ void create_graph(Boite *, list<Particule> &);
 
 ostream & operator <<(ostream &,Boite&);
 void print_graph(Boite *);
+// Modifier son contenu vers le constructeur de Boite 
 Boite first_box(list<Particule> &);
 void force(Particule &, Boite* );
 void all_forces(Boite *, Boite *);
 void global_initialisation(list<Particule>&);
 void global_update(list<Particule>&);
-void graph_update(Boite *, Boite *, list<Particule> &);
+void is_particules_out(Boite &, list<Particule> &);
+void eliminate_and_add_graph(Boite & ,list<Particule> & );
 void global_clear(Boite *);
 
 

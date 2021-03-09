@@ -224,41 +224,44 @@ void global_update(list<Particule> & particules){
 //////////////////////////////
 ///////Update du Graphe //////
 //////////////////////////////
-void graph_update(Boite * primal, Boite * current, list<Particule> & particules){
-    if(current->P != 0){
-        if(current->sister != 0){
-            graph_update(primal, current->sister, particules);
-        }
-        //On applique la mise à jour
-        //Si la particule sort du cadre
-        cout<<current->P->r_x<<endl;
-        if( (current->P->r_x < primal->C.x - primal->w/2) || (current->P->r_x >= primal->C.x + primal->w / 2) || (current->P->r_y < primal->C.y - primal->l / 2) || (current->P->r_y >= primal->C.y + primal->l / 2) || (current->P->r_z < primal->C.z - primal->d / 2) || (current->P->r_z >= primal->C.z + primal->d / 2) ){
-            cout<<"COUCOU"<<endl;
-            Boite primal_new; 
-            primal_new = first_box(particules);
+void is_particules_out(Boite & primal, list<Particule> & particules){
+    //On teste qu'aucune particule sort du cadre.
+    list<Particule>::iterator  it=particules.begin();
+    for(; it!=particules.end(); it++){
+        if( (it->r_x < primal.C.x - primal.w/2) || (it->r_x >= primal.C.x + primal.w / 2) || (it->r_y < primal.C.y - primal.l / 2) || (it->r_y >= primal.C.y + primal.l / 2) || (it->r_z < primal.C.z - primal.d / 2) || (it->r_z >= primal.C.z + primal.d / 2) ){
+            Boite inter;
+            inter = first_box(particules);
+            Boite* primal_new = new Boite(inter);
             //clear le primal
-
             /* GROS PROBLEME DE GESTION DE MEMOIRE*/
-            
-            cout<<*(primal->child->sister)<<endl;
-            global_clear(primal);
-            cout<<*(primal->child->sister)<<endl;
-            primal = &primal_new;
-            create_graph(primal, particules);
+            global_clear(&primal);
+            primal = *primal_new;
+            create_graph(&primal, particules);
+            return;
         }
-        else{
-            if( (current->P->r_x < current->C.x - current->w / 2) && (current->P->r_x >= current->C.x + current->w / 2) && (current->P->r_y < current->C.y - current->l / 2) && (current->P->r_y >= current->C.y + current->l / 2) && (current->P->r_z < current->C.z - current->d / 2) && (current->P->r_z >= current->C.z + current->d / 2) ){
-                //suppression
-                //ajout
-            }
+    }
+    //SI aucune n'est sortie on peut continuer
+    /*
+    
+    */
+}
+
+void eliminate_and_add_graph(Boite & current,list<Particule> & particules){
+    if(current.P != 0){
+        if( (current. P->r_x < current.C.x - current.w / 2) || (current.P->r_x >= current.C.x + current.w / 2) || (current.P->r_y < current.C.y - current.l / 2) || (current.P->r_y >= current.C.y + current.l / 2) || (current.P->r_z < current.C.z - current.d / 2) || (current.P->r_z >= current.C.z + current.d / 2) ){
+            //suppression
+            //ajout
+        }
+        if(current.sister != 0){
+            eliminate_and_add_graph(*current.sister, particules);
         }
     }
     else{
-        if(current->child != 0){
-            graph_update(primal, current->child, particules);
+        if(current.child != 0){
+            eliminate_and_add_graph(*current.child, particules);
         }
-        if(current->sister != 0){
-            graph_update(primal, current->sister, particules);
+        if(current.sister != 0){
+            eliminate_and_add_graph(*current.sister, particules);
         }
     }
 }

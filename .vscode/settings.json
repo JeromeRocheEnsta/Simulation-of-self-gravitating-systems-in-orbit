@@ -9,6 +9,7 @@
         "complex": "cpp",
         "cmath": "cpp",
         "ostream": "cpp",
-        "new": "cpp"
+        "new": "cpp",
+        "iosfwd": "cpp"
     }
 }
