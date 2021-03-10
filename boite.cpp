@@ -203,11 +203,23 @@ ostream & operator<< (ostream & os, Boite& B){
 
 
 void global_clear(Boite * current){
-    //A changer pour juste appeler delete à l'enfant !
     if(current->child != NULL){
         delete current->child;
         current->child = NULL;
+        cout<<current<<endl;
     }
+}
+
+void global_clear(Boite & current){
+    
+    if(current.child != NULL){
+        
+        delete current.child;
+        cout<<current.child<<endl;
+        current.child = 0;
+        cout<<&current<<endl;
+    }
+    
 }
 
 

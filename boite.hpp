@@ -107,10 +107,11 @@ void force(Particule &, Boite* );
 void all_forces(Boite *, Boite *);
 void global_initialisation(list<Particule>&);
 void global_update(list<Particule>&);
+void global_clear(Boite *);
+void global_clear(Boite &);
+//Graph update
 void is_particules_out(Boite &, list<Particule> &);
 void eliminate_and_add_graph(Boite & ,list<Particule> & );
-void global_clear(Boite *);
-
-
+void elimination(Boite & current,list<Particule> & particules);
 
 #endif

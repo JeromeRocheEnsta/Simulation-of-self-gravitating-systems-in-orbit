@@ -98,24 +98,35 @@ int main(int argc, char const *argv[]){
 
 
 
-    //Test des fonctionnalités
+    //Test des nouvelles fonctionnalités update_graph
 
     
     //cout<<Test<<endl;
-    Particule P1(1,1, 0, 0, 0);
-    Particule P2(10,-1, 0, 0, 0,0);
+    Particule P1(1,0, 0, 0, 0);
+    Particule P2(10,0.5, 0, 0, 0,0);
+    Particule P3(10,1, 0, 0, 0,0);
     list<Particule> particules;
     particules.push_back(P1);
     particules.push_back(P2);
+    particules.push_back(P3);
     
     Boite primal;
     primal = first_box(particules);
+    cout<<primal<<endl;
     create_graph(&primal, particules);
     print_graph(&primal);
-    particules.begin()->r_x = -1;
-    //is_particules_out(primal, particules);
+    particules.back().r_x = -1;
+    list<Particule>::iterator it = particules.begin();
+    for(; it!=particules.end(); it++){
+        cout<<*it<<endl;
+    }
+
+
     eliminate_and_add_graph(primal, particules);
     print_graph(&primal);
+    //is_particules_out(primal, particules);
+    //eliminate_and_add_graph(primal, particules);
+    //print_graph(&primal);
     //cout<<"Entre deux"<<endl;
     //print_graph(&primal);
     

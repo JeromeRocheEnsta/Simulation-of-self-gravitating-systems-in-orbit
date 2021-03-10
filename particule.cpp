@@ -240,28 +240,49 @@ void is_particules_out(Boite & primal, list<Particule> & particules){
             return;
         }
     }
-    //SI aucune n'est sortie on peut continuer
-    /*
-    
-    */
 }
 
 void eliminate_and_add_graph(Boite & current,list<Particule> & particules){
     if(current.P != 0){
+        
         if( (current. P->r_x < current.C.x - current.w / 2) || (current.P->r_x >= current.C.x + current.w / 2) || (current.P->r_y < current.C.y - current.l / 2) || (current.P->r_y >= current.C.y + current.l / 2) || (current.P->r_z < current.C.z - current.d / 2) || (current.P->r_z >= current.C.z + current.d / 2) ){
-            //suppression
+            cout<<"Cool"<<endl;
+            elimination(current, particules);
             //ajout
         }
         if(current.sister != 0){
+            cout<<"Beurk"<<endl;
             eliminate_and_add_graph(*current.sister, particules);
         }
     }
     else{
+        cout<<"C"<<endl;
         if(current.child != 0){
             eliminate_and_add_graph(*current.child, particules);
         }
         if(current.sister != 0){
             eliminate_and_add_graph(*current.sister, particules);
+        }
+    }
+}
+
+void elimination(Boite & current,list<Particule> & particules){
+    cout<<*current.P<<endl;
+    current.P = 0;
+    
+    if(current.mother->check_number(particules) == 1){
+        
+        current.mother->find_unique_child(particules);
+
+        Boite & mother = *current.mother;
+        print_graph(&mother);
+        global_clear(mother);
+        print_graph(&mother);
+        if(mother.mother != 0){
+            cout<<"elimination"<<endl;
+            if(mother.mother->check_number(particules) == 1){
+                elimination(mother, particules);
+            }
         }
     }
 }
