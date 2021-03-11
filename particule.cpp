@@ -20,11 +20,11 @@ list<Particule> generateur_plummer(double N)
         r=0.999*r-1;
         r=sqrt(r);
         r=1/r;
-        cout<<x_1<<" "<<r<<endl;
+        cout<<r<<endl;
         while (u_r>1){
-            x_2 = x*rand();
-            x_3 = x*rand();
-            x_4 = x*rand();
+            x_2 = 2*(x*rand()-0.5);
+            x_3 = 2*(x*rand()-0.5);
+            x_4 = 2*(x*rand()-0.5);
             u_r=pow(pow(x_2,2)+pow(x_3,2)+pow(x_4,2),1./2);
         }
         //Calcul des coordonnées
@@ -46,9 +46,9 @@ list<Particule> generateur_plummer(double N)
         v=x_1*v_e;
 
         while (u_v>1){
-            x_2 = x*rand();
-            x_3 = x*rand();
-            x_4 = x*rand();
+            x_2 = 2*(x*rand()-0.5);
+            x_3 = 2*(x*rand()-0.5);
+            x_4 = 2*(x*rand()-0.5);
             
             u_v=sqrt(pow(x_2,2)+pow(x_3,2)+pow(x_4,2));
         }
@@ -272,9 +272,7 @@ void elimination(Boite & current,list<Particule> & particules){
         current.mother->find_unique_child(particules);
 
         Boite & mother = *current.mother;
-        print_graph(&mother);
         global_clear(mother);
-        print_graph(&mother);
         if(mother.mother != 0){
             if(mother.mother->check_number(particules) == 1){
                 elimination(mother, particules);

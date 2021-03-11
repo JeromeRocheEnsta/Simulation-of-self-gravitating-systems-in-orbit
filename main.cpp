@@ -8,6 +8,9 @@
 #include <chrono>
 #include <ctime>
  
+
+#define PI 3.141592 
+
 using namespace std;
 
 
@@ -47,21 +50,8 @@ int main(int argc, char const *argv[]){
     */
 
    
-   //Tests génération modèle de Plummer
-    double M= 1;
-    double E = -10;
-    list<Particule> particules;
-    particules = generateur_plummer(5);
-    list<Particule>::iterator it =particules.begin();
-    for(;it!=particules.end();it ++){
-        it->m *= M;
-        it->r_x *= 3*pi*M*M/(64*(-E));
-        it->r_y *= 3*pi*M*M/(64*(-E));
-        it->r_z *= 3*pi*M*M/(64*(-E));
-        it->v_x *= 64*sqrt(-E)/(4*pi*sqrt(M));
-        it->v_y *= 64*sqrt(-E)/(4*pi*sqrt(M));
-        it->v_z *= 64*sqrt(-E)/(4*pi*sqrt(M));
-    }
+   
+
     
    
     
@@ -164,6 +154,64 @@ int main(int argc, char const *argv[]){
     chrono::duration<double> elapsed_seconds = end-start;
     cout<<"elapsed time: "<<elapsed_seconds.count()<<endl;
     */
+
+
+   //Tests génération modèle de Plummer
+    double M= 1E-2;
+    double E = -1E-4;
+    list<Particule> particules = generateur_plummer(2000);
+    list<Particule>::iterator it =particules.begin();
+    for(;it!=particules.end();it ++){
+        it->m *= M;
+        it->r_x *= 3*PI*M*M/(64*(-E));
+        it->r_y *= 3*PI*M*M/(64*(-E));
+        it->r_z *= 3*PI*M*M/(64*(-E));
+        it->v_x *= 64*sqrt(-E)/(4*PI*sqrt(M));
+        it->v_y *= 64*sqrt(-E)/(4*PI*sqrt(M));
+        it->v_z *= 64*sqrt(-E)/(4*PI*sqrt(M));
+    }
+    
+    auto start = chrono::system_clock::now();
+    ofstream fichier("resultats.txt", ios::out| ios::trunc);
+    if (fichier){
+        Boite primal;
+        primal = first_box(particules);
+        create_graph(&primal, particules);
+        //print_graph(&primal);
+        all_forces(&primal, &primal);
+        global_initialisation(particules);
+        //On fait évoluer le système sur 10 pas de temps
+        int temps=300;
+        int step=0; 
+        list<Particule>::iterator it =particules.begin();
+        for(;it!=particules.end();it ++){
+            fichier<< parsec*it->r_x <<"\t"<< parsec*it->r_y << "\t"<< parsec*it->r_z<<"\t"<<it->v_x<<"\t"<<it->v_y<<"\t"<<it->v_z<<'\t'<<it->F_x<<'\t'<<it->F_y<<"\n"<<endl;
+        }
+        
+        for(step=0;step<=temps;step++){
+            cout<<step+1<<endl;
+            all_forces(&primal, &primal);
+            global_update(particules);
+            //affichage_by_step( particules,step);
+            //Ecriture dans le fichier
+            list<Particule>::iterator it = particules.begin();
+            for(;it!=particules.end();it ++){
+                fichier<< parsec*it->r_x <<"\t"<< parsec*it->r_y << "\t"<< parsec*it->r_z<<"\t"<<ref_vit*it->v_x<<"\t"<<ref_vit*it->v_y<<"\t"<<ref_vit*it->v_z<<'\t'<<it->F_x<<'\t'<<it->F_y<<"\n"<<endl;
+            }
+            is_particules_out(primal, particules);
+            eliminate_and_add_graph(primal, primal, particules);
+        }
+        fichier.close();
+    }
+    else{
+       cerr << "Cannot open the file" << endl;
+    } 
+    auto end = chrono::system_clock::now();
+    chrono::duration<double> elapsed_seconds = end-start;
+    cout<<"elapsed time: "<<elapsed_seconds.count()<<endl;
+    
+
+
 
 
    /*
