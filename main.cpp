@@ -48,11 +48,19 @@ int main(int argc, char const *argv[]){
 
    /*
    //Tests génération modèle de Plummer
+    double M= 1;
+    double E = -10;
     list<Particule> particules;
     particules = generateur_plummer(5);
     list<Particule>::iterator it =particules.begin();
     for(;it!=particules.end();it ++){
-        cout<<*it<<endl;
+        it->m *= M;
+        it->r_x *= 3*pi*M*M/(64*(-E));
+        it->r_y *= 3*pi*M*M/(64*(-E));
+        it->r_z *= 3*pi*M*M/(64*(-E));
+        it->v_x *= 64*sqrt(-E)/(4*pi*sqrt(M));
+        it->v_Z *= 64*sqrt(-E)/(4*pi*sqrt(M));
+        it->v_Z *= 64*sqrt(-E)/(4*pi*sqrt(M));
     }
     */
    
