@@ -242,32 +242,29 @@ void is_particules_out(Boite & primal, list<Particule> & particules){
     }
 }
 
-void eliminate_and_add_graph(Boite & current,list<Particule> & particules){
+void eliminate_and_add_graph(Boite & primal, Boite & current,list<Particule> & particules){
     if(current.P != 0){
         
-        if( (current. P->r_x < current.C.x - current.w / 2) || (current.P->r_x >= current.C.x + current.w / 2) || (current.P->r_y < current.C.y - current.l / 2) || (current.P->r_y >= current.C.y + current.l / 2) || (current.P->r_z < current.C.z - current.d / 2) || (current.P->r_z >= current.C.z + current.d / 2) ){
-            cout<<"Cool"<<endl;
+        if( (current.P->r_x < current.C.x - current.w / 2) || (current.P->r_x >= current.C.x + current.w / 2) || (current.P->r_y < current.C.y - current.l / 2) || (current.P->r_y >= current.C.y + current.l / 2) || (current.P->r_z < current.C.z - current.d / 2) || (current.P->r_z >= current.C.z + current.d / 2) ){
+            add(primal, current.P, particules);
             elimination(current, particules);
-            //ajout
+            
         }
         if(current.sister != 0){
-            cout<<"Beurk"<<endl;
-            eliminate_and_add_graph(*current.sister, particules);
+            eliminate_and_add_graph(primal, *current.sister, particules);
         }
     }
     else{
-        cout<<"C"<<endl;
         if(current.child != 0){
-            eliminate_and_add_graph(*current.child, particules);
+            eliminate_and_add_graph(primal, *current.child, particules);
         }
         if(current.sister != 0){
-            eliminate_and_add_graph(*current.sister, particules);
+            eliminate_and_add_graph(primal, *current.sister, particules);
         }
     }
 }
 
 void elimination(Boite & current,list<Particule> & particules){
-    cout<<*current.P<<endl;
     current.P = 0;
     
     if(current.mother->check_number(particules) == 1){
@@ -279,7 +276,6 @@ void elimination(Boite & current,list<Particule> & particules){
         global_clear(mother);
         print_graph(&mother);
         if(mother.mother != 0){
-            cout<<"elimination"<<endl;
             if(mother.mother->check_number(particules) == 1){
                 elimination(mother, particules);
             }
@@ -287,6 +283,19 @@ void elimination(Boite & current,list<Particule> & particules){
     }
 }
 
+void add(Boite & current, Particule* p, list<Particule> & particules){
+    if(current.child != 0){
+        add(*current.child, p, particules);
+    }
+    else{
+        if( (p->r_x >= current.C.x - current.w / 2) && (p->r_x < current.C.x + current.w / 2) && (p->r_y >= current.C.y - current.l / 2) && (p->r_y < current.C.y + current.l / 2) && (p->r_z >= current.C.z - current.d / 2) && (p->r_z < current.C.z + current.d / 2) ){
+            create_graph(&current ,particules);
+        }
+    }
+    if(current.sister != 0){
+        add(*current.sister, p, particules);
+    }
+}
 
 
 

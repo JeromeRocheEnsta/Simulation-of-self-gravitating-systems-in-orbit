@@ -213,11 +213,8 @@ void global_clear(Boite * current){
 void global_clear(Boite & current){
     
     if(current.child != NULL){
-        
         delete current.child;
-        cout<<current.child<<endl;
         current.child = 0;
-        cout<<&current<<endl;
     }
     
 }

@@ -102,8 +102,8 @@ int main(int argc, char const *argv[]){
 
     
     //cout<<Test<<endl;
-    Particule P1(1,0, 0, 0, 0);
-    Particule P2(10,0.5, 0, 0, 0,0);
+    Particule P1(1,0.5, 0, 0, 0);
+    Particule P2(10,-1, 0, 0, 0,0);
     Particule P3(10,1, 0, 0, 0,0);
     list<Particule> particules;
     particules.push_back(P1);
@@ -112,17 +112,14 @@ int main(int argc, char const *argv[]){
     
     Boite primal;
     primal = first_box(particules);
-    cout<<primal<<endl;
     create_graph(&primal, particules);
     print_graph(&primal);
-    particules.back().r_x = -1;
+    particules.front().r_x = -0.5;
     list<Particule>::iterator it = particules.begin();
     for(; it!=particules.end(); it++){
         cout<<*it<<endl;
     }
-
-
-    eliminate_and_add_graph(primal, particules);
+    eliminate_and_add_graph(primal, primal, particules);
     print_graph(&primal);
     //is_particules_out(primal, particules);
     //eliminate_and_add_graph(primal, particules);
