@@ -46,7 +46,8 @@ class Particule
   
 };
 
-list<Particule> generateur_plummer(double N);
+list<Particule> generateur_plummer(double N, double M, double E, double R, double mu, double omega, bool circ = false);
+void Plummer_circ(list<Particule>& particules, double R, double M,double omega, double mu);
 ostream & operator <<(ostream &,Particule&);
 void affichage_by_step(list<Particule>, int ); //Il nous permettra d'afficher l'état de notre sysytème à chaque itérations 
 
@@ -103,8 +104,12 @@ ostream & operator <<(ostream &,Boite&);
 void print_graph(Boite *);
 // Modifier son contenu vers le constructeur de Boite 
 Boite first_box(list<Particule> &);
+
+//Calcul de la force
 void force(Particule &, Boite* );
 void all_forces(Boite *, Boite *);
+void calculate_forces(Boite *, Boite *, list<Particule> &, double omega, bool);
+
 void global_initialisation(list<Particule>&);
 void global_update(list<Particule>&);
 void global_clear(Boite *);

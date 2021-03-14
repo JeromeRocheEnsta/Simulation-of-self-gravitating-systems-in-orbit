@@ -156,20 +156,18 @@ int main(int argc, char const *argv[]){
     */
 
 
+
+   
    //Tests génération modèle de Plummer
     double M= 1E-2;
     double E = -1E-4;
-    list<Particule> particules = generateur_plummer(2000);
-    list<Particule>::iterator it =particules.begin();
-    for(;it!=particules.end();it ++){
-        it->m *= M;
-        it->r_x *= 3*PI*M*M/(64*(-E));
-        it->r_y *= 3*PI*M*M/(64*(-E));
-        it->r_z *= 3*PI*M*M/(64*(-E));
-        it->v_x *= 64*sqrt(-E)/(4*PI*sqrt(M));
-        it->v_y *= 64*sqrt(-E)/(4*PI*sqrt(M));
-        it->v_z *= 64*sqrt(-E)/(4*PI*sqrt(M));
-    }
+    double R = 1;
+    double mu = 1;
+    double omega = 1;
+    bool circ = true;
+    list<Particule> particules = generateur_plummer(2000, M, E, R, mu, omega, circ);
+    
+    
     
     auto start = chrono::system_clock::now();
     ofstream fichier("resultats.txt", ios::out| ios::trunc);
@@ -178,10 +176,11 @@ int main(int argc, char const *argv[]){
         primal = first_box(particules);
         create_graph(&primal, particules);
         //print_graph(&primal);
+        //calculate_forces(&primal, &primal, particules, omega, circ);
         all_forces(&primal, &primal);
         global_initialisation(particules);
         //On fait évoluer le système sur 10 pas de temps
-        int temps=300;
+        int temps=50;
         int step=0; 
         list<Particule>::iterator it =particules.begin();
         for(;it!=particules.end();it ++){
@@ -190,16 +189,21 @@ int main(int argc, char const *argv[]){
         
         for(step=0;step<=temps;step++){
             cout<<step+1<<endl;
-            all_forces(&primal, &primal);
+            calculate_forces(&primal, &primal, particules, omega, circ);
+            //all_forces(&primal, &primal);
             global_update(particules);
+            
             //affichage_by_step( particules,step);
             //Ecriture dans le fichier
             list<Particule>::iterator it = particules.begin();
             for(;it!=particules.end();it ++){
                 fichier<< parsec*it->r_x <<"\t"<< parsec*it->r_y << "\t"<< parsec*it->r_z<<"\t"<<ref_vit*it->v_x<<"\t"<<ref_vit*it->v_y<<"\t"<<ref_vit*it->v_z<<'\t'<<it->F_x<<'\t'<<it->F_y<<"\n"<<endl;
             }
+            
             is_particules_out(primal, particules);
+            
             eliminate_and_add_graph(primal, primal, particules);
+            
         }
         fichier.close();
     }
@@ -212,6 +216,18 @@ int main(int argc, char const *argv[]){
     
 
 
+   /*
+   //Tests génération modèle de Plummer
+    double M= 1E-2;
+    double E = -1E-4;
+    double R = 0;
+    double mu = 1;
+    list<Particule> particules = generateur_plummer(5, M, E, R, mu, true);
+    list<Particule>::iterator it =particules.begin();
+    for(;it != particules.end(); it++){
+        cout<<it->r_x<<endl;
+    }
+    */
 
 
    /*

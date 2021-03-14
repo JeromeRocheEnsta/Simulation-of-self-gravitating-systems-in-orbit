@@ -1,4 +1,5 @@
 load('resultats.txt');
+resultats = resultats; 
 [N,p]=size(resultats);
 N_steps=302;
 temps = linspace(1,N_steps+1,N_steps+1);

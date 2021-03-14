@@ -3,7 +3,9 @@
 #include <list>
 
 
-list<Particule> generateur_plummer(double N)
+#define PI 3.141592 
+
+list<Particule> generateur_plummer(double N, double M, double E, double R, double mu, double omega, bool circ)
 {
     list<Particule> particules;
     double x,x_1,x_2,x_3,x_4,v,v_e,r;
@@ -20,7 +22,6 @@ list<Particule> generateur_plummer(double N)
         r=0.999*r-1;
         r=sqrt(r);
         r=1/r;
-        cout<<r<<endl;
         while (u_r>1){
             x_2 = 2*(x*rand()-0.5);
             x_3 = 2*(x*rand()-0.5);
@@ -67,9 +68,42 @@ list<Particule> generateur_plummer(double N)
         //Ajout à la liste de particules
         particules.push_back(P);
     }
+
+    //Normalisation à la masse M et l'Energie E
+    list<Particule>::iterator it =particules.begin();
+    for(;it!=particules.end();it ++){
+        it->m *= M;
+        it->r_x *= 3*PI*M*M/(64*(-E));
+        it->r_y *= 3*PI*M*M/(64*(-E));
+        it->r_z *= 3*PI*M*M/(64*(-E));
+        it->v_x *= 64*sqrt(-E)/(4*PI*sqrt(M));
+        it->v_y *= 64*sqrt(-E)/(4*PI*sqrt(M));
+        it->v_z *= 64*sqrt(-E)/(4*PI*sqrt(M));
+    }
+    
+    if(circ == true){
+        Plummer_circ(particules, R, M, omega, mu);
+    }
+
     return particules;
 }
 
+
+void Plummer_circ(list<Particule>& particules, double R, double M, double omega, double mu){
+    list<Particule>::iterator it =particules.begin();
+    double v_circ = 1;
+    /*
+    v_circ *= (R*R + 1);
+    v_circ = pow(v_circ, 3./4 );
+    v_circ= 1/v_circ;
+    v_circ *= R*sqrt(1/M);
+    */
+   v_circ = R*omega;
+    for(;it!=particules.end();it ++){
+        it->r_x += R;
+        it->v_y += mu * v_circ;
+    }
+}
 
 ////////////////////////////////////////////////
 ////Calcul de la valeur force sur 1 particule///
@@ -168,13 +202,33 @@ void all_forces(Boite * primal, Boite * current){
 }
 
 
+void calculate_forces(Boite * primal, Boite * current, list<Particule> & particules, double omega, bool circ){
+    all_forces(primal, current);
+    if(circ == true){
+        double r;
+        list<Particule>::iterator it = particules.begin();
+        for(; it != particules.end(); it++){
+            r = pow(it->r_x, 2) + pow(it->r_y, 2) + pow(it->r_z, 2);
+            r = sqrt(r);
+            if(r < 1){
+                r = 1;
+            }
+            it->F_x += it->m * omega * omega * it->r_x/r;
+            it->F_y += it->m * omega * omega * it->r_y/r;
+            it->F_z += it->m * omega * omega * it->r_z/r;
+        }
+    }
+
+}
+
+
 
 //////////////////////////////////////////
 ///////Vitesse initiale des particules////
 //////////////////////////////////////////
 
 void Particule::initialisation(){
-    double t=1E-2;
+    double t=1E-1;
     v_x=v_x+t*F_x/(2*m);
     v_y=v_y+t*F_y/(2*m);
     v_z=v_z+t*F_z/(2*m); //J'ai changé r_x en v_x etc.. c'était pas homogène
@@ -197,7 +251,7 @@ void global_initialisation(list<Particule> & particules){
 //////////////////////////////
 
 void Particule::mise_a_jour(){
-    double t=1E-2;
+    double t=1E-1;
     v_x=v_x+t*F_x/m;
     v_y=v_y+t*F_y/m;
     v_z=v_z+t*F_z/m;
