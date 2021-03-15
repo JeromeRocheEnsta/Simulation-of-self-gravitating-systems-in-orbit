@@ -1,7 +1,7 @@
 load('resultats.txt');
 resultats = resultats; 
 [N,p]=size(resultats);
-N_steps=302;
+N_steps=1002;
 temps = linspace(1,N_steps+1,N_steps+1);
 Nb_particules = N/N_steps;
 global dynamique_x; global dynamique_y; global dynamique_z;
@@ -31,14 +31,16 @@ for i=1:Nb_particules
     end
 end
 
-for j=2:N_steps+1
+for j=2:N_steps+12
     for i=1:Nb_particules
        plot(dynamique_x(i,j),dynamique_y(i,j),'k.','MarkerSize',10);
        
-       xlim([-2*1e16; 2*1e16])
-       ylim([-2*1e16; 2*1e16])
+       xlim([-2*1e17; 2*1e17])
+       ylim([-2*1e17; 2*1e17])
        hold on;
     end
     drawnow;  hold off; 
-    pause(0.1);
+    pause(0.01);
 end
+
+fprintf('Done_2\n');

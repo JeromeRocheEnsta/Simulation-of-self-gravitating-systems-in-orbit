@@ -41,8 +41,8 @@ class Particule
     Particule(double m = 0,double r_x_=0 ,double r_y_=0, double r_z_=0 , double v_x_=0,double v_y_=0, double v_z_=0,double F_x_=0,double F_y_=0, double F_z_=0):
         m(m),r_x(r_x_),r_y(r_y_),r_z(r_z_),v_x(v_x_),v_y(v_y_),v_z(v_z_),F_x(F_x_),F_y(F_y_),F_z(F_z_){}
 
-    void initialisation();
-    void mise_a_jour();
+    void initialisation(double);
+    void mise_a_jour(double);
   
 };
 
@@ -110,8 +110,8 @@ void force(Particule &, Boite* );
 void all_forces(Boite *, Boite *);
 void calculate_forces(Boite *, Boite *, list<Particule> &, double omega, bool);
 
-void global_initialisation(list<Particule>&);
-void global_update(list<Particule>&);
+void global_initialisation(list<Particule>&, double);
+void global_update(list<Particule>&, double);
 void global_clear(Boite *);
 void global_clear(Boite &);
 //Graph update

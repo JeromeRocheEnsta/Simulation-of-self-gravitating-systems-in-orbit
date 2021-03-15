@@ -159,13 +159,14 @@ int main(int argc, char const *argv[]){
 
    
    //Tests génération modèle de Plummer
+    double t=1E-3;
     double M= 1E-2;
     double E = -1E-4;
-    double R = 1;
+    double R = 10;
     double mu = 1;
-    double omega = 1;
+    double omega = 0.1;
     bool circ = true;
-    list<Particule> particules = generateur_plummer(2000, M, E, R, mu, omega, circ);
+    list<Particule> particules = generateur_plummer(500, M, E, R, mu, omega, circ);
     
     
     
@@ -178,9 +179,9 @@ int main(int argc, char const *argv[]){
         //print_graph(&primal);
         //calculate_forces(&primal, &primal, particules, omega, circ);
         all_forces(&primal, &primal);
-        global_initialisation(particules);
+        global_initialisation(particules, t);
         //On fait évoluer le système sur 10 pas de temps
-        int temps=50;
+        int temps=1000;
         int step=0; 
         list<Particule>::iterator it =particules.begin();
         for(;it!=particules.end();it ++){
@@ -191,7 +192,7 @@ int main(int argc, char const *argv[]){
             cout<<step+1<<endl;
             calculate_forces(&primal, &primal, particules, omega, circ);
             //all_forces(&primal, &primal);
-            global_update(particules);
+            global_update(particules, t);
             
             //affichage_by_step( particules,step);
             //Ecriture dans le fichier

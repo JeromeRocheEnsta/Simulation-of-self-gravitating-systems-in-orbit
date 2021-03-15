@@ -227,21 +227,20 @@ void calculate_forces(Boite * primal, Boite * current, list<Particule> & particu
 ///////Vitesse initiale des particules////
 //////////////////////////////////////////
 
-void Particule::initialisation(){
-    double t=1E-1;
+void Particule::initialisation(double t){
     v_x=v_x+t*F_x/(2*m);
     v_y=v_y+t*F_y/(2*m);
     v_z=v_z+t*F_z/(2*m); //J'ai changé r_x en v_x etc.. c'était pas homogène
 }
 
-void global_initialisation(list<Particule> & particules){
+void global_initialisation(list<Particule> & particules, double t){
     /*
         entrée: liste de particules qu'on initialisera leur vitesse initiale
         sortie: rien on modifie les vitesses 
     */
     list<Particule>::iterator  it=particules.begin();
      for(;it!= particules.end();it++){
-         it->initialisation();
+         it->initialisation(t);
      }
 }
 
@@ -250,8 +249,7 @@ void global_initialisation(list<Particule> & particules){
 ///////Schéma saute-mouton////
 //////////////////////////////
 
-void Particule::mise_a_jour(){
-    double t=1E-1;
+void Particule::mise_a_jour(double t){
     v_x=v_x+t*F_x/m;
     v_y=v_y+t*F_y/m;
     v_z=v_z+t*F_z/m;
@@ -261,7 +259,7 @@ void Particule::mise_a_jour(){
 }
 
 
-void global_update(list<Particule> & particules){
+void global_update(list<Particule> & particules, double t){
     /*
         entrée: liste de particules 
         sortie: rien on met à jour leur position 
@@ -269,7 +267,7 @@ void global_update(list<Particule> & particules){
 
     list<Particule>::iterator  it=particules.begin();
     for(; it!=particules.end(); it++){
-        it->mise_a_jour();
+        it->mise_a_jour(t);
     }
 }
 
