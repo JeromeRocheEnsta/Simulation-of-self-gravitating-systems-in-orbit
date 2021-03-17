@@ -20,3 +20,6 @@ puis:
 En sortie on obtient un fichier resultats.txt
 
 Pour visualiser la modélisation il faut ouvrir le fichier src/traitements.m grâce à matlab et suivre le commentaires du code.
+Il y a deux sections dans ce fichier : 
+- La première permet de télécharger le contenu de resultats.txt et pour cela il vous faudra changer N_steps.
+- La seconde permet de visualiser la simulation. ATTENTION a bien changer la fenêtre de visualisation afin d'observer votre système.
