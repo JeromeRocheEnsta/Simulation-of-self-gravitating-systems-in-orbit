@@ -23,7 +23,7 @@ int main(int argc, char const *argv[]){
     double ref_vit = parsec/ref_temps ;
 
 
-       //Tests génération modèle de Plummer
+    //Tests génération modèle de Plummer
     double t=1E-1;
     //double M= 1E2;
     double M= 1E5;
@@ -33,6 +33,8 @@ int main(int argc, char const *argv[]){
     double b_ext = 500;
     double mu = 1.25;
     bool circ = false;
+
+    // Génération des conditions initiales
     list<Particule> particules = generateur_plummer(500, M, E, R, mu, circ, M_ext, b_ext);
     
     
@@ -40,41 +42,46 @@ int main(int argc, char const *argv[]){
     auto start = chrono::system_clock::now();
     ofstream fichier("resultats.txt", ios::out| ios::trunc);
     if (fichier){
+        //Création du graphe
         Boite primal;
         primal = first_box(particules);
         create_graph(&primal, particules);
-        //print_graph(&primal);
-        //calculate_forces(&primal, &primal, particules, omega, circ);
-        
-        
+
+        // Calcul initial des forces        
         all_forces(&primal, &primal, circ, M_ext, b_ext);
         
+        // initialisation de la vitesse des particules
         global_initialisation(particules, t);
-        //On fait évoluer le système sur 10 pas de temps
+
+        //On fait évoluer le système sur temps pas de temps
         int temps=500;
-        int step=0; 
+        int step=0;
+
+        //Permet d'écrire dans le fichier de sortie l'état intiial du système
         list<Particule>::iterator it =particules.begin();
         for(;it!=particules.end();it ++){
             fichier<< it->r_x <<"\t"<< it->r_y << "\t"<< it->r_z<<"\t"<<it->v_x<<"\t"<<it->v_y<<"\t"<<it->v_z<<'\t'<<it->F_x<<'\t'<<it->F_y<<"\n"<<endl;
         }
         
+        //2volution du système
         for(step=0;step<=temps;step++){
             cout<<step+1<<endl;
             
+            //Calcul des forces
             all_forces(&primal, &primal, circ, M_ext, b_ext);
-            //all_forces(&primal, &primal);
+
+            //Schéma saute-mouton
             global_update(particules, t);
             
-            //affichage_by_step( particules,step);
-            //Ecriture dans le fichier
+            //Ecriture dans le fichier de sortie
             list<Particule>::iterator it = particules.begin();
             for(;it!=particules.end();it ++){
                 fichier<< it->r_x <<"\t"<< it->r_y << "\t"<< it->r_z<<"\t"<<it->v_x<<"\t"<<it->v_y<<"\t"<<it->v_z<<'\t'<<it->F_x<<'\t'<<it->F_y<<"\n"<<endl;
             }
             
+            //Mise à jour du graphe
             is_particules_out(primal, particules);
             eliminate_and_add_graph(primal, primal, particules);
-            
         }
         fichier.close();
     }
