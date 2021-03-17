@@ -13,13 +13,14 @@ Ensuite, suivez les commentaires de la partie décommentée du main.cpp. Les par
 
 Pour éxécuter le code il faut appliquer la commande:
 
-g++ -std=c++11  src/main.cpp src/particule.cpp src/boite.cpp src/point3d.cpp src/graph_update.cpp src/plummer.cpp src/forces.cpp
+g++ -std=c++11  src/main.cpp src/particule.cpp src/boite.cpp src/point3d.cpp src/graph_update.cpp src/plummer.cpp src/forces.cpp src/energie.cpp
 puis:
 ./a.out
 
-En sortie on obtient un fichier resultats.txt
+En sortie on obtient deux fichiers: resultats.txt (positions et vitesses des particules) et energie.txt qui contient l'évolution de l'énergie avec les itérations.
 
 Pour visualiser la modélisation il faut ouvrir le fichier src/traitements.m grâce à matlab et suivre le commentaires du code.
-Il y a deux sections dans ce fichier : 
+Il y a trois sections dans ce fichier : 
 - La première permet de télécharger le contenu de resultats.txt et pour cela il vous faudra changer N_steps.
 - La seconde permet de visualiser la simulation. ATTENTION a bien changer la fenêtre de visualisation afin d'observer votre système.
+- La troisième permet de visualiser l'évolution de l'énergie
