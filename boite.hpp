@@ -13,7 +13,7 @@ class Point3d{
         double x;
         double y;
         double z;
-        Point3d(double x0=0,double y0=0, double z0=0):x(x0),y(y0),z(z0){} //constructeur prenant deux coordonnées
+        Point3d(double x0=0,double y0=0, double z0=0):x(x0),y(y0),z(z0){} //constructeur prenant trois coordonnées
         Point3d& operator +=(const Point3d & P){x+=P.x; y+=P.y; z=P.z; return *this;}
         Point3d& operator -=(const Point3d & P){x-=P.x; y-=P.y; z=P.z; return *this;}
         Point3d& operator *=(double a){x*=a; y*=a; z*=a;return *this;}
@@ -46,8 +46,8 @@ class Particule
   
 };
 
-list<Particule> generateur_plummer(double N, double M, double E, double R, double mu, double omega, bool circ = false);
-void Plummer_circ(list<Particule>& particules, double R, double M,double omega, double mu);
+list<Particule> generateur_plummer(double N, double M, double E, double R, double mu, bool circ = false, double M_ext = 0, double b_ext = 0);
+void Plummer_circ(list<Particule>& particules, double R, double M,double mu, double b_ext);
 ostream & operator <<(ostream &,Particule&);
 void affichage_by_step(list<Particule>, int ); //Il nous permettra d'afficher l'état de notre sysytème à chaque itérations 
 
@@ -107,7 +107,7 @@ Boite first_box(list<Particule> &);
 
 //Calcul de la force
 void force(Particule &, Boite* );
-void all_forces(Boite *, Boite *);
+void all_forces(Boite *, Boite *, bool, double, double);
 void calculate_forces(Boite *, Boite *, list<Particule> &, double omega, bool);
 
 void global_initialisation(list<Particule>&, double);

@@ -159,14 +159,16 @@ int main(int argc, char const *argv[]){
 
    
    //Tests génération modèle de Plummer
-    double t=1E-3;
-    double M= 1E-2;
-    double E = -1E-4;
-    double R = 10;
-    double mu = 1;
-    double omega = 0.1;
-    bool circ = true;
-    list<Particule> particules = generateur_plummer(500, M, E, R, mu, omega, circ);
+    double t=1E-1;
+    //double M= 1E2;
+    double M= 1E5;
+    double E = -1E3;
+    double R = 1E4;
+    double M_ext = 1E9;
+    double b_ext = 500;
+    double mu = 1.25;
+    bool circ = false;
+    list<Particule> particules = generateur_plummer(500, M, E, R, mu, circ, M_ext, b_ext);
     
     
     
@@ -178,19 +180,23 @@ int main(int argc, char const *argv[]){
         create_graph(&primal, particules);
         //print_graph(&primal);
         //calculate_forces(&primal, &primal, particules, omega, circ);
-        all_forces(&primal, &primal);
+        
+        
+        all_forces(&primal, &primal, circ, M_ext, b_ext);
+        
         global_initialisation(particules, t);
         //On fait évoluer le système sur 10 pas de temps
-        int temps=1000;
+        int temps=500;
         int step=0; 
         list<Particule>::iterator it =particules.begin();
         for(;it!=particules.end();it ++){
-            fichier<< parsec*it->r_x <<"\t"<< parsec*it->r_y << "\t"<< parsec*it->r_z<<"\t"<<it->v_x<<"\t"<<it->v_y<<"\t"<<it->v_z<<'\t'<<it->F_x<<'\t'<<it->F_y<<"\n"<<endl;
+            fichier<< it->r_x <<"\t"<< it->r_y << "\t"<< it->r_z<<"\t"<<it->v_x<<"\t"<<it->v_y<<"\t"<<it->v_z<<'\t'<<it->F_x<<'\t'<<it->F_y<<"\n"<<endl;
         }
         
         for(step=0;step<=temps;step++){
             cout<<step+1<<endl;
-            calculate_forces(&primal, &primal, particules, omega, circ);
+            
+            all_forces(&primal, &primal, circ, M_ext, b_ext);
             //all_forces(&primal, &primal);
             global_update(particules, t);
             
@@ -198,11 +204,10 @@ int main(int argc, char const *argv[]){
             //Ecriture dans le fichier
             list<Particule>::iterator it = particules.begin();
             for(;it!=particules.end();it ++){
-                fichier<< parsec*it->r_x <<"\t"<< parsec*it->r_y << "\t"<< parsec*it->r_z<<"\t"<<ref_vit*it->v_x<<"\t"<<ref_vit*it->v_y<<"\t"<<ref_vit*it->v_z<<'\t'<<it->F_x<<'\t'<<it->F_y<<"\n"<<endl;
+                fichier<< it->r_x <<"\t"<< it->r_y << "\t"<< it->r_z<<"\t"<<it->v_x<<"\t"<<it->v_y<<"\t"<<it->v_z<<'\t'<<it->F_x<<'\t'<<it->F_y<<"\n"<<endl;
             }
             
             is_particules_out(primal, particules);
-            
             eliminate_and_add_graph(primal, primal, particules);
             
         }
@@ -231,33 +236,30 @@ int main(int argc, char const *argv[]){
     */
 
 
-   /*
+    /*
     //Test des nouvelles fonctionnalités update_graph
 
     
     //cout<<Test<<endl;
     Particule P1(1,0.5, 0, 0, 0);
-    Particule P2(10,-1, 0, 0, 0,0);
-    Particule P3(10,1, 0, 0, 0,0);
     list<Particule> particules;
     particules.push_back(P1);
-    particules.push_back(P2);
-    particules.push_back(P3);
-    
+
     Boite primal;
     primal = first_box(particules);
     create_graph(&primal, particules);
     print_graph(&primal);
-    particules.front().r_x = -0.5;
+    
+    particules.front().r_x = 8;
     list<Particule>::iterator it = particules.begin();
     for(; it!=particules.end(); it++){
-        cout<<*it<<endl;
+        //cout<<*it<<endl;
     }
+    //eliminate_and_add_graph(primal, primal, particules);
+    //print_graph(&primal);
+    is_particules_out(primal, particules);
     eliminate_and_add_graph(primal, primal, particules);
     print_graph(&primal);
-    //is_particules_out(primal, particules);
-    //eliminate_and_add_graph(primal, particules);
-    //print_graph(&primal);
     //cout<<"Entre deux"<<endl;
     //print_graph(&primal);
     */

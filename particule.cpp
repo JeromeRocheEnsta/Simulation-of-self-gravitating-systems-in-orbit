@@ -5,7 +5,7 @@
 
 #define PI 3.141592 
 
-list<Particule> generateur_plummer(double N, double M, double E, double R, double mu, double omega, bool circ)
+list<Particule> generateur_plummer(double N, double M, double E, double R, double mu, bool circ, double M_ext, double b_ext)
 {
     list<Particule> particules;
     double x,x_1,x_2,x_3,x_4,v,v_e,r;
@@ -22,6 +22,7 @@ list<Particule> generateur_plummer(double N, double M, double E, double R, doubl
         r=0.999*r-1;
         r=sqrt(r);
         r=1/r;
+        
         while (u_r>1){
             x_2 = 2*(x*rand()-0.5);
             x_3 = 2*(x*rand()-0.5);
@@ -73,6 +74,7 @@ list<Particule> generateur_plummer(double N, double M, double E, double R, doubl
     list<Particule>::iterator it =particules.begin();
     for(;it!=particules.end();it ++){
         it->m *= M;
+        
         it->r_x *= 3*PI*M*M/(64*(-E));
         it->r_y *= 3*PI*M*M/(64*(-E));
         it->r_z *= 3*PI*M*M/(64*(-E));
@@ -82,23 +84,20 @@ list<Particule> generateur_plummer(double N, double M, double E, double R, doubl
     }
     
     if(circ == true){
-        Plummer_circ(particules, R, M, omega, mu);
+        Plummer_circ(particules, R, M_ext, mu, b_ext);
     }
 
     return particules;
 }
 
 
-void Plummer_circ(list<Particule>& particules, double R, double M, double omega, double mu){
+void Plummer_circ(list<Particule>& particules, double R, double M_ext, double mu, double b_ext){
     list<Particule>::iterator it =particules.begin();
-    double v_circ = 1;
-    /*
-    v_circ *= (R*R + 1);
-    v_circ = pow(v_circ, 3./4 );
-    v_circ= 1/v_circ;
-    v_circ *= R*sqrt(1/M);
-    */
-   v_circ = R*omega;
+    double v_circ = R*R;
+    v_circ += b_ext*b_ext;
+    v_circ = pow(v_circ, 3./4);
+    v_circ = 1/ v_circ;
+    v_circ *= R*sqrt(M_ext);
     for(;it!=particules.end();it ++){
         it->r_x += R;
         it->v_y += mu * v_circ;
@@ -118,7 +117,8 @@ void force(Particule & pr, Boite *b){
         entrée: Référence sur la particule considéré + Boite que l'on parcours actuellement dans le graphe
         sortie: rien on met à jour la force boîte après boîte.
     */
-    const double G= 6.6742E-11;
+    //const double G= 6.6742E-11;
+    const double G= 1;
     const double epsilon1 = max(b->l,max(b->w,b->d)); //distance négligeable devant 
     const double epsilon2 = 1E-2; //facteur d'adoucissement
     Particule *P_term;
@@ -129,7 +129,7 @@ void force(Particule & pr, Boite *b){
     /*Calcul de la distance entre le centre G de la boite et la particule que l'on traite
     Si cette distance/100 est plus grande que epsilon1 on est dans le cas où la distance entre les particules compris dans la boite b 
     est très petite devant la distance à notre particule*/
-    if (epsilon1 < sqrt(d)/10 ){
+    if (epsilon1 < sqrt(d)/100 ){
         //facteur d'adoucissement
         if (d<=epsilon2){d=epsilon2;}
         pr.F_x += G * b->m * pr.m * (Centre.x - pr.r_x) / sqrt(pow(d,3));
@@ -170,7 +170,7 @@ void force(Particule & pr, Boite *b){
 /*
 On peut faire beaucoup mieux en changeant current par particules ainsi on parcours seulement la liste des particules plutôt que le graph....
 */
-void all_forces(Boite * primal, Boite * current){
+void all_forces(Boite * primal, Boite * current, bool circ, double M_ext, double b_ext){
     /*
     Parcours du graphe afin de traiter toutes les particules
     Entrée: 
@@ -187,39 +187,33 @@ void all_forces(Boite * primal, Boite * current){
        current->P->F_y = 0;
        current->P->F_z = 0;
        force(*current->P, primal);
+       if(circ == true){
+            double r = pow(current->P->r_x, 2) + pow(current->P->r_y, 2) + pow(current->P->r_z, 2);
+            
+            r += b_ext*b_ext;
+            
+            r = pow(r, 3./2);
+            r = 1/r;
+            r *= - current->P->m * M_ext;
+            current->P->F_x = r* current->P->r_x;
+            current->P->F_y = r* current->P->r_y;
+            current->P->F_z = r* current->P->r_z;
+       }
    }
 
    //Sinon on vérifie si elle a un enfant et on fait le calcul
    if(current->child != NULL){
-       all_forces(primal ,current->child);
+       all_forces(primal ,current->child, circ, M_ext, b_ext);
    }
 
    // En meme temps on regarde pour ces soeurs 
    if(current->sister != NULL){
-       all_forces(primal, current->sister);
+       all_forces(primal, current->sister, circ, M_ext, b_ext);
    }
 
 }
 
 
-void calculate_forces(Boite * primal, Boite * current, list<Particule> & particules, double omega, bool circ){
-    all_forces(primal, current);
-    if(circ == true){
-        double r;
-        list<Particule>::iterator it = particules.begin();
-        for(; it != particules.end(); it++){
-            r = pow(it->r_x, 2) + pow(it->r_y, 2) + pow(it->r_z, 2);
-            r = sqrt(r);
-            if(r < 1){
-                r = 1;
-            }
-            it->F_x += it->m * omega * omega * it->r_x/r;
-            it->F_y += it->m * omega * omega * it->r_y/r;
-            it->F_z += it->m * omega * omega * it->r_z/r;
-        }
-    }
-
-}
 
 
 
@@ -289,6 +283,7 @@ void is_particules_out(Boite & primal, list<Particule> & particules){
             global_clear(&primal);
             primal = *primal_new;
             create_graph(&primal, particules);
+            cout<<"Particule out"<<endl;
             return;
         }
     }

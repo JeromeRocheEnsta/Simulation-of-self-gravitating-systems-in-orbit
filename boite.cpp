@@ -38,9 +38,9 @@ Boite first_box(list<Particule> & particules){
     }
     Point3d C(0,0,0);
     B.C = C; 
-    B.l = 2*max_length + 2;
-    B.w = 2*max_width+ 2;
-    B.d= 2*max_depth + 2;
+    B.l = 4*max_length + 2;
+    B.w = 4*max_width + 2;
+    B.d= 4*max_depth + 2;
     B.calculate_mass(particules);
     B.calculate_center_of_mass(particules);
     B.P = NULL;
@@ -61,7 +61,6 @@ void create_graph(Boite* current,list<Particule> & particules){
         Sinon on détermine la particule liée à la boîte (si elle existe)
         Dans tous les cas si la boïte d'entrée à une soeur on applique la fonction à la soeur
     */
-
     //On profite de commencer par trouver m et G
     current->calculate_mass(particules);
     current->calculate_center_of_mass(particules);
@@ -74,6 +73,7 @@ void create_graph(Boite* current,list<Particule> & particules){
         }
     }
     else if(current->check_number(particules)==1){
+        
         current->find_unique_child(particules);
         if(current->sister != 0){
             create_graph( current->sister, particules);
@@ -122,6 +122,7 @@ int Boite::check_number(list<Particule> & particules){
     */
     int compteur=0;
     list<Particule>::iterator it = particules.begin();
+    
     for(; it!=particules.end(); it++){
         if( (it->r_x >= C.x - w/2) && (it->r_y >= C.y - l/2) && (it->r_x < C.x + w/2) && (it->r_y < C.y + l/2) && (it->r_z >= C.z - d/2) && (it->r_z < C.z + d/2)){
             compteur++;
@@ -264,6 +265,6 @@ bool operator !=(const Point3d & u, const Point3d &v){
 }
 
 ostream & operator <<(ostream & os ,const Point3d& u){
-    os<<"( "<<u.x<<", "<<u.y<<" )";
+    os<<"( "<<u.x<<", "<<u.y<<", "<<u.z<<" )";
     return os ;
 }
