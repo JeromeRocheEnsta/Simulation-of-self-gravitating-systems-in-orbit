@@ -1,6 +1,13 @@
-load('resultats.txt');
-resultats = resultats; 
+%%
+load('resultats.txt'); 
 [N,p]=size(resultats);
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% N_steps correspond au nombre d'it?rations + 2 %%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 N_steps=602;
 temps = linspace(1,N_steps+1,N_steps+1);
 Nb_particules = N/N_steps;
@@ -20,20 +27,16 @@ fprintf('Done\n');
 
 
 %%
-xmax= max(abs(dynamique_x(1,:)));
-ymax=max(abs(dynamique_y(1,:)));
-for i=1:Nb_particules
-    if xmax< max(abs(dynamique_x(i,:)))
-        xmax = max(abs(dynamique_x(i,:)));
-    end
-    if ymax< max(abs(dynamique_x(i,:)))
-        ymax = max(abs(dynamique_y(i,:)))+1;
-    end
-end
-
 for j=2:N_steps
     for i=1:Nb_particules
        plot(dynamique_x(i,j),dynamique_y(i,j),'k.','MarkerSize',10);
+       
+       
+       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+       %%% Adapter la fen?tre de visualisation pour coller avec votre
+       %%% syst?me
+       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+       
        
        xlim([-2*1e2; 2*1e2])
        ylim([-2*1e2; 2*1e2])
@@ -46,3 +49,4 @@ for j=2:N_steps
 end
 
 fprintf('Done_2\n');
+
