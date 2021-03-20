@@ -25,17 +25,16 @@ int main(int argc, char const *argv[]){
 
     //Tests génération modèle de Plummer
     double t=1E-1;
-    //double M= 1E2;
-    double M= 1E5;
-    double E = -1E3;
+    double M= 1E2;
+    double E = - 5;
     double R = 1E4;
     double M_ext = 1E9;
     double b_ext = 500;
-    double mu = 1.25;
+    double mu = 0.1;
     bool circ = false;
 
     // Génération des conditions initiales
-    list<Particule> particules = generateur_plummer(500, M, E, R, mu, circ, M_ext, b_ext);
+    list<Particule> particules = generateur_plummer(1000, M, E, R, mu, circ, M_ext, b_ext);
     
     
     
@@ -54,7 +53,7 @@ int main(int argc, char const *argv[]){
         global_initialisation(particules, t);
 
         //On fait évoluer le système sur temps pas de temps
-        int temps=500;
+        int temps=100;
         int step=0;
 
         //Permet d'écrire dans le fichier de sortie l'état intiial du système

@@ -1,14 +1,14 @@
 %%
-load('resultats.txt'); 
+resultats = load('Plummer_0.5circ_500_6000.txt');
 [N,p]=size(resultats);
-load('energie.txt');
+%load('energie.txt');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% N_steps correspond au nombre d'it?rations + 2 %%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-N_steps=602;
+N_steps=6002;
 temps = linspace(1,N_steps+1,N_steps+1);
 Nb_particules = N/N_steps;
 global dynamique_x; global dynamique_y; global dynamique_z;
@@ -24,14 +24,19 @@ for i=1:Nb_particules
     end
 end
 fprintf('Done\n');
+
+%%
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%% Evolution de l'energie mecanique %%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 temps =1:N_steps;
 plot(temps,energie);
-xlabel("Iteration")
+xlabel('Iteration')
 ylabel('Energie')
 pause(10)
+
+%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%Affichage et conception d'une video%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -46,8 +51,8 @@ for j=2:N_steps+1
              %%% Adapter la fen?tre de visualisation pour coller avec votre
             %%% syst?me
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            xlim([-3; 3])
-            ylim([-3; 3])
+            xlim([-4E4; 4E4])
+            ylim([-4E4; 4E4])
             hold on;
         end
         drawnow;  hold off;

@@ -28,7 +28,7 @@ void force(Particule & pr, Boite *b){
     /*Calcul de la distance entre le centre G de la boite et la particule que l'on traite
     Si cette distance/100 est plus grande que epsilon1 on est dans le cas où la distance entre les particules compris dans la boite b 
     est très petite devant la distance à notre particule*/
-    if (epsilon1 < sqrt(d)/100 ){
+    if (epsilon1 < sqrt(d)/10 ){
         //facteur d'adoucissement
         if (d<=epsilon2){d=epsilon2;}
         pr.F_x += G * b->m * pr.m * (Centre.x - pr.r_x) / sqrt(pow(d,3));
